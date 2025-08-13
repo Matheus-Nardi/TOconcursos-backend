@@ -1,0 +1,22 @@
+# Framework FastAPI
+fastapi
+
+# Servidor ASGI
+uvicorn[standard]
+
+# Validação e schemas
+pydantic
+
+# ORM / Banco de dados
+sqlalchemy
+
+# Variáveis de ambiente
+python-dotenv
+
+# Migrações de banco (opcional)
+alembic
+
+# Testes
+pytest
+pytest-asyncio
+httpx
