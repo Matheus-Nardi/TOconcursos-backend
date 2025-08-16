@@ -1,8 +1,11 @@
 # app/main.py
 from fastapi import FastAPI
+from database import Base, engine
+from routers import disciplina_router
 
-app = FastAPI()
+Base.metadata.create_all(bind=engine)
 
-@app.get("/")
-def root():
-    return {"message": "Hello FastAPI + Docker!"}
+app = FastAPI(title="TOConcursos API")
+
+
+app.include_router(disciplina_router.router)
