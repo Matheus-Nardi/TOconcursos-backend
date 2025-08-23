@@ -1,25 +1,34 @@
-from schemas.questoes.alternativa import AlternativaResponseDTO
-from schemas.questoes.comentario import ComentarioResponseDTO
 from pydantic import BaseModel
-from typing import List, Optional
+from schemas.questoes.alternativa import AlternativaRequestDTO, AlternativaResponseDTO
+from schemas.questoes.disciplina import DisciplinaResponseDTO
+
+
+from schemas.questoes.orgao import OrgaoResponseDTO
+from schemas.questoes.instituicao import InstituicaoResponseDTO
+from schemas.questoes.banca import BancaResponseDTO
+
 
 class QuestaoRequestDTO(BaseModel):
     enunciado: str
-    instituicao_id: int
-    dificuldade_id: int
-    banca_id: int
+    id_disciplina: int
+    id_dificuldade: int
+    id_orgao: int
+    id_instituicao: int
+    id_banca: int
+    alternativas: list[AlternativaRequestDTO]  
 
 class QuestaoResponseDTO(BaseModel):
     id: int
     enunciado: str
-    instituicao_id: int
-    dificuldade_id: int
-    banca_id: int
-    alternativas: Optional[List[AlternativaResponseDTO]] = None
-    comentarios: Optional[List[ComentarioResponseDTO]] = None
+    disciplina: DisciplinaResponseDTO
+    orgao: OrgaoResponseDTO
+    instituicao: InstituicaoResponseDTO
+    banca: BancaResponseDTO
+    alternativas: list[AlternativaResponseDTO]
 
     model_config = {
         "from_attributes": True
     }
-
-
+        
+        
+        

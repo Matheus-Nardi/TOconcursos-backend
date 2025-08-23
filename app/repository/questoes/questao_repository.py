@@ -6,18 +6,24 @@ class QuestaoRepository:
     def __init__(self, db: Session):
         self.db = db
         
-    def create_questao(self, questao: schemas.QuestaoRequestDTO) -> models.Questao:
-        db_questao = models.Questao(nome=questao.nome)
-        self.db.add(db_questao)
+    def create_questao(self, questao: models.Questao) -> models.Questao:
+        self.db.add(questao)
         self.db.commit()
-        self.db.refresh(db_questao)
-        return db_questao
+        self.db.refresh(questao)
+        return questao
 
+
+    def get_questao_by_name(self, nome: str) -> models.Questao:
+        return self.db.query(models.Questao).filter(models.Questao.nome == nome).first()
+    
     def get_questao(self, questao_id: int) -> models.Questao:
         return self.db.get(models.Questao, questao_id)
 
     def get_all_questaos(self) -> list[models.Questao]:
         return self.db.query(models.Questao).all()
+    
+    def get_all_questaos(self, skip: int = 0, limit: int = 10) -> list[models.Questao]:
+        return self.db.query(models.Questao).offset(skip).limit(limit).all()
 
     def update_questao(self, questao_id: int, questao: schemas.QuestaoRequestDTO) -> models.Questao:
         db_questao = self.get_questao(questao_id)
@@ -35,7 +41,3 @@ class QuestaoRepository:
             return True
         else:
             return False
-
-    def get_all_questoes(self, skip: int = 0, limit: int = 10) -> list[schemas.QuestaoResponseDTO]:
-        questoes = self.repo.get_all_questoes(skip=skip, limit=limit)
-        return [schemas.QuestaoResponseDTO.model_validate(d) for d in questoes]

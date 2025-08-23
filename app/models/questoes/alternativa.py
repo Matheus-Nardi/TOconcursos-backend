@@ -10,5 +10,5 @@ class Alternativa(Base):
     descricao = Column(String)
     is_correta = Column(Boolean, default=False)
 
-    questao_id = Column(Integer, ForeignKey("questoes.id"))
-    questao = relationship("Questao", back_populates="alternativas")
+    id_questao = Column(Integer, ForeignKey("questoes.id"))
+    questao = relationship("Questao")

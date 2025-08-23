@@ -7,12 +7,18 @@ class Questao(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     enunciado = Column(String)
-    instituicao_id = Column(Integer, ForeignKey("instituicoes.id"))
-    dificuldade_id = Column(Integer, ForeignKey("dificuldades.id"))
-    banca_id = Column(Integer, ForeignKey("bancas.id"))
+    id_disciplina = Column(Integer, ForeignKey("disciplinas.id"))
+    disciplina = relationship("Disciplina")
+    id_dificuldade = Column(Integer, ForeignKey("dificuldades.id"), nullable=True)
+    dificuldade = relationship("Dificuldade")
 
-    alternativas = relationship("Alternativa", back_populates="questao")
-    comentarios = relationship("Comentario", back_populates="questao")
-    instituicao = relationship("Instituicao", back_populates="questoes")
-    dificuldade = relationship("Dificuldade", back_populates="questoes")
-    banca = relationship("Banca", back_populates="questoes")
+    id_orgao = Column(Integer, ForeignKey("orgaos.id"))
+    orgao = relationship("Orgao")
+
+    id_instituicao = Column(Integer, ForeignKey("instituicoes.id"))
+    instituicao = relationship("Instituicao")
+
+    id_banca = Column(Integer, ForeignKey("bancas.id"))
+    banca = relationship("Banca")
+
+    alternativas = relationship("Alternativa", cascade="all, delete-orphan")
