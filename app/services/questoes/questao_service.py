@@ -17,19 +17,19 @@ class QuestaoService:
         self.banca_repo = BancaRepository(db)
 
     def create_questao(self, questao: schemas.QuestaoRequestDTO) -> schemas.QuestaoResponseDTO:
-        db_disciplina = self.disciplina_repo.get_disciplina(questao.id_disciplina)
+        db_disciplina = self.disciplina_repo.get_by_id(questao.id_disciplina)
         if not db_disciplina:
             raise ValueError(f"Disciplina with id {questao.id_disciplina} not found.")
 
-        db_orgao = self.orgao_repo.get_orgao(questao.id_orgao)
+        db_orgao = self.orgao_repo.get_by_id(questao.id_orgao)
         if not db_orgao:
             raise ValueError(f"Orgao with id {questao.id_orgao} not found.")
 
-        db_instituicao = self.instituicao_repo.get_instituicao(questao.id_instituicao)
+        db_instituicao = self.instituicao_repo.get_by_id(questao.id_instituicao)
         if not db_instituicao:
             raise ValueError(f"Instituicao with id {questao.id_instituicao} not found.")
 
-        db_banca = self.banca_repo.get_banca(questao.id_banca)
+        db_banca = self.banca_repo.get_by_id(questao.id_banca)
         if not db_banca:
             raise ValueError(f"Banca with id {questao.id_banca} not found.")
 
@@ -40,11 +40,12 @@ class QuestaoService:
         ]
         db_questao = Questao(
             enunciado = questao.enunciado,
-            disciplina = db_disciplina.id,
-            orgao = db_orgao.id,
-            instituicao = db_instituicao.id,
-            banca = db_banca.id,
+            disciplina = db_disciplina,
+            orgao = db_orgao,
+            instituicao = db_instituicao,
+            banca = db_banca,
             alternativas = db_alternativas
+            
         )
 
         db_questao = self.repo.create_questao(db_questao)

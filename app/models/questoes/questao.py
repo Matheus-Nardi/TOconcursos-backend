@@ -1,7 +1,7 @@
 from database import Base
-from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy import Column, Integer, String, ForeignKey, Enum
 from sqlalchemy.orm import relationship
-
+from models.questoes.dificuldade import DificuldadeEnum
 class Questao(Base):
     __tablename__ = "questoes"
 
@@ -9,8 +9,7 @@ class Questao(Base):
     enunciado = Column(String)
     id_disciplina = Column(Integer, ForeignKey("disciplinas.id"))
     disciplina = relationship("Disciplina")
-    id_dificuldade = Column(Integer, ForeignKey("dificuldades.id"), nullable=True)
-    dificuldade = relationship("Dificuldade")
+    dificuldade = Column(Enum(DificuldadeEnum), nullable=False, default=DificuldadeEnum.FACIL)
 
     id_orgao = Column(Integer, ForeignKey("orgaos.id"))
     orgao = relationship("Orgao")

@@ -7,11 +7,6 @@ INSERT INTO bancas (id, nome) VALUES
 (3, 'FGV'),
 (4, 'AOCP');
 
--- Inserindo dados na tabela 'dificuldades'
-INSERT INTO dificuldades (id, nome) VALUES
-(1, 'Fácil'),
-(2, 'Média'),
-(3, 'Difícil');
 
 -- Inserindo dados na tabela 'instituicoes'
 INSERT INTO instituicoes (id, nome) VALUES

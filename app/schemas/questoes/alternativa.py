@@ -8,8 +8,7 @@ class AlternativaResponseDTO(BaseModel):
     id: int
     descricao: str
     is_correta: bool
-    questao_id: int
-
+    
     model_config = {
         "from_attributes": True
     }

@@ -1,3 +1,4 @@
+from models.questoes.dificuldade import DificuldadeEnum
 from pydantic import BaseModel
 from schemas.questoes.alternativa import AlternativaRequestDTO, AlternativaResponseDTO
 from schemas.questoes.disciplina import DisciplinaResponseDTO
@@ -11,7 +12,7 @@ from schemas.questoes.banca import BancaResponseDTO
 class QuestaoRequestDTO(BaseModel):
     enunciado: str
     id_disciplina: int
-    id_dificuldade: int
+    dificuldade: DificuldadeEnum = DificuldadeEnum.FACIL
     id_orgao: int
     id_instituicao: int
     id_banca: int
@@ -20,6 +21,7 @@ class QuestaoRequestDTO(BaseModel):
 class QuestaoResponseDTO(BaseModel):
     id: int
     enunciado: str
+    dificuldade: DificuldadeEnum
     disciplina: DisciplinaResponseDTO
     orgao: OrgaoResponseDTO
     instituicao: InstituicaoResponseDTO

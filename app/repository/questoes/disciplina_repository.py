@@ -1,40 +1,32 @@
 from sqlalchemy.orm import Session
 from models.questoes import disciplina as models
-from schemas.questoes import disciplina as schemas
 
 class DisciplinaRepository:
     def __init__(self, db: Session):
         self.db = db
-        
-    def create_disciplina(self, disciplina: schemas.DisciplinaRequestDTO) -> models.Disciplina:
-        db_disciplina = models.Disciplina(nome=disciplina.nome)
-        self.db.add(db_disciplina)
-        self.db.commit()
-        self.db.refresh(db_disciplina)
-        return db_disciplina
 
-    def get_disciplina_by_name(self, nome: str) -> models.Disciplina:
-        return self.db.query(models.Disciplina).filter(models.Disciplina.nome == nome).first()
-    
-    def get_disciplina(self, disciplina_id: int) -> models.Disciplina:
+    def save(self, disciplina: models.Disciplina) -> models.Disciplina:
+        """
+        Salva uma instância de Disciplina (cria ou atualiza).
+        """
+        self.db.add(disciplina)
+        self.db.commit()
+        self.db.refresh(disciplina)
+        return disciplina
+
+    def get_by_id(self, disciplina_id: int) -> models.Disciplina | None:
+        """ Busca uma disciplina pelo seu ID. """
         return self.db.get(models.Disciplina, disciplina_id)
 
-    def get_all_disciplinas(self) -> list[models.Disciplina]:
-        return self.db.query(models.Disciplina).all()
+    def get_by_name(self, nome: str) -> models.Disciplina | None:
+        """ Busca uma disciplina pelo nome. """
+        return self.db.query(models.Disciplina).filter(models.Disciplina.nome == nome).first()
 
-    def update_disciplina(self, disciplina_id: int, disciplina: schemas.DisciplinaRequestDTO) -> models.Disciplina:
-        db_disciplina = self.get_disciplina(disciplina_id)
-        if db_disciplina:
-            db_disciplina.nome = disciplina.nome
-            self.db.commit()
-            self.db.refresh(db_disciplina)
-        return db_disciplina
+    def get_all(self, skip: int = 0, limit: int = 100) -> list[models.Disciplina]:
+        """ Retorna uma lista de disciplinas com paginação. """
+        return self.db.query(models.Disciplina).offset(skip).limit(limit).all()
 
-    def delete_disciplina(self, disciplina_id: int) -> bool:
-        db_disciplina = self.get_disciplina(disciplina_id)
-        if db_disciplina:
-            self.db.delete(db_disciplina)
-            self.db.commit()
-            return True
-        else:
-            return False
+    def delete(self, disciplina: models.Disciplina) -> None:
+        """ Deleta uma instância de Disciplina. """
+        self.db.delete(disciplina)
+        self.db.commit()

@@ -96,16 +96,10 @@ def delete_banca(
     banca_id: int,
     service: BancaService = Depends(get_banca_service),
 ):
-    if service.delete_banca(banca_id):
-        return response_dto(
-            data=None,
-            status="success",
-            message="Banca deleted successfully",
-            http_code=status.HTTP_204_NO_CONTENT
-        )
+    service.delete_banca(banca_id)
     return response_dto(
         data=None,
-        status="error",
-        message="Banca not found",
-        http_code=status.HTTP_404_NOT_FOUND
+        status="success",
+        message="Banca deleted successfully",
+        http_code=status.HTTP_204_NO_CONTENT
     )

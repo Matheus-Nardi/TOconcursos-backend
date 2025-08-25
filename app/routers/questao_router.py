@@ -98,16 +98,10 @@ def delete_questao(
     questao_id: int,
     service: QuestaoService = Depends(get_questao_service),
 ):
-    if service.delete_questao(questao_id):
-        return response_dto(
-            data=None,
-            status="success",
-            message="Questao deleted successfully",
-            http_code=status.HTTP_204_NO_CONTENT
-        )
+    service.delete_questao(questao_id)
     return response_dto(
         data=None,
-        status="error",
-        message="Questao not found",
-        http_code=status.HTTP_404_NOT_FOUND
-    )
+        status="success",
+        message="Questao deleted successfully",
+        http_code=status.HTTP_204_NO_CONTENT
+        )
