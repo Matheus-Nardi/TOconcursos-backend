@@ -10,15 +10,15 @@ class BancaService:
         self.repo = BancaRepository(db)
         
     def create_banca(self, banca_dto: schemas.BancaRequestDTO) -> schemas.BancaResponseDTO:
-        nome_normalizado = banca_dto.nome.strip().lower().capitalize()
+        label_normalizado = banca_dto.label.strip().lower().capitalize()
         
-        if self.repo.get_by_name(nome_normalizado):
+        if self.repo.get_by_name(label_normalizado):
             raise HTTPException(
                 status_code=status.HTTP_409_CONFLICT,
-                detail=f"A banca '{nome_normalizado}' já existe."
+                detail=f"A banca '{label_normalizado}' já existe."
             )
         
-        db_banca = Banca(nome=nome_normalizado)
+        db_banca = Banca(label=label_normalizado)
         saved_banca = self.repo.save(db_banca)
         
         return schemas.BancaResponseDTO.model_validate(saved_banca)
@@ -46,16 +46,16 @@ class BancaService:
                 detail="Banca não encontrada para atualização."
             )
         
-        nome_normalizado = banca_dto.nome.strip().lower().capitalize()
+        label_normalizado = banca_dto.label.strip().lower().capitalize()
 
-        existing_banca = self.repo.get_by_name(nome_normalizado)
+        existing_banca = self.repo.get_by_name(label_normalizado)
         if existing_banca and existing_banca.id != banca_id:
             raise HTTPException(
                 status_code=status.HTTP_409_CONFLICT,
-                detail=f"O nome '{nome_normalizado}' já está em uso por outra banca."
+                detail=f"O label '{label_normalizado}' já está em uso por outra banca."
             )
 
-        db_banca.nome = nome_normalizado
+        db_banca.label = label_normalizado
         updated_banca = self.repo.save(db_banca)
         
         return schemas.BancaResponseDTO.model_validate(updated_banca)

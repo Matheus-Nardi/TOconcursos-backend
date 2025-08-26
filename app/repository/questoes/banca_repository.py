@@ -19,9 +19,9 @@ class BancaRepository:
         """ Busca uma banca pelo seu ID. """
         return self.db.get(models.Banca, banca_id)
 
-    def get_by_name(self, nome: str) -> models.Banca | None:
-        """ Busca uma banca pelo nome. """
-        return self.db.query(models.Banca).filter(models.Banca.nome == nome).first()
+    def get_by_name(self, label: str) -> models.Banca | None:
+        """ Busca uma banca pelo label. """
+        return self.db.query(models.Banca).filter(models.Banca.label == label).first()
 
     def get_all(self, skip: int = 0, limit: int = 100) -> list[models.Banca]:
         """

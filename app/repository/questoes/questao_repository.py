@@ -13,8 +13,8 @@ class QuestaoRepository:
         return questao
 
 
-    def get_questao_by_name(self, nome: str) -> models.Questao:
-        return self.db.query(models.Questao).filter(models.Questao.nome == nome).first()
+    def get_questao_by_name(self, label: str) -> models.Questao:
+        return self.db.query(models.Questao).filter(models.Questao.label == label).first()
     
     def get_questao(self, questao_id: int) -> models.Questao:
         return self.db.get(models.Questao, questao_id)
@@ -28,7 +28,7 @@ class QuestaoRepository:
     def update_questao(self, questao_id: int, questao: schemas.QuestaoRequestDTO) -> models.Questao:
         db_questao = self.get_questao(questao_id)
         if db_questao:
-            db_questao.nome = questao.nome
+            db_questao.label = questao.label
             self.db.commit()
             self.db.refresh(db_questao)
         return db_questao

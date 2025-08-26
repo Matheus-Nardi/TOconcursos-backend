@@ -1,7 +1,7 @@
 -- SQL Import Script - Concurso Tocantins
 
 -- Inserindo dados na tabela 'bancas'
-INSERT INTO bancas (id, nome) VALUES
+INSERT INTO bancas (id, label) VALUES
 (1, 'COPESE/UFT'),
 (2, 'Cebraspe'),
 (3, 'FGV'),
@@ -9,13 +9,13 @@ INSERT INTO bancas (id, nome) VALUES
 
 
 -- Inserindo dados na tabela 'instituicoes'
-INSERT INTO instituicoes (id, nome) VALUES
+INSERT INTO instituicoes (id, label) VALUES
 (1, 'Prefeitura de Palmas'),
 (2, 'Governo do Estado do Tocantins'),
 (3, 'Assembleia Legislativa do Tocantins'),
 (4, 'Universidade Federal do Tocantins (UFT)');
 
-INSERT INTO disciplinas (id, nome) VALUES
+INSERT INTO disciplinas (id, label) VALUES
 (1, 'Língua Portuguesa'),
 (2, 'Raciocínio Lógico e Matemático'),
 (3, 'Direito Constitucional'),
@@ -28,7 +28,7 @@ INSERT INTO disciplinas (id, nome) VALUES
 (10, 'Administração Geral');
 
 -- Inserindo dados na tabela 'orgaos'
-INSERT INTO orgaos (id, nome) VALUES
+INSERT INTO orgaos (id, label) VALUES
 (1, 'Tribunal de Justiça do Estado do Tocantins (TJTO)'),
 (2, 'Ministério Público do Estado do Tocantins (MPTO)'),
 (3, 'Defensoria Pública do Estado do Tocantins (DPE-TO)'),
@@ -43,14 +43,14 @@ INSERT INTO orgaos (id, nome) VALUES
 -- INSERT INTO questoes (id, enunciado, instituicao_id, dificuldade_id, banca_id) VALUES
 -- -- Bloco 1: História e Geografia do Tocantins
 -- (1, 'O Estado do Tocantins foi oficialmente criado pela Constituição Federal de 1988, sendo desmembrado de qual outro estado brasileiro?', 2, 1, 1),
--- (2, 'Qual é o nome da maior ilha fluvial do mundo, localizada no estado do Tocantins?', 2, 1, 2),
+-- (2, 'Qual é o label da maior ilha fluvial do mundo, localizada no estado do Tocantins?', 2, 1, 2),
 -- (3, 'A capital do Tocantins, Palmas, foi projetada e construída especificamente para ser a sede do governo do novo estado. Em que ano ela foi fundada?', 1, 2, 3),
 -- (4, 'O Parque Estadual do Jalapão, um dos principais destinos turísticos do Tocantins, é famoso por suas paisagens únicas. Qual das seguintes características NÃO corresponde ao Jalapão?', 2, 2, 1),
 -- (5, 'O "Bico do Papagaio" é uma importante região geográfica, social e econômica do Tocantins. Ela está localizada no:', 3, 2, 4),
 
 -- -- Bloco 2: Legislação e Administração Pública (Estadual)
 -- (6, 'De acordo com a Constituição do Estado do Tocantins, o Poder Executivo é exercido pelo Governador do Estado, auxiliado pelos:', 3, 2, 2),
--- (7, 'Qual o nome do primeiro governador do estado do Tocantins, figura central no movimento autonomista que levou à criação do estado?', 3, 2, 3),
+-- (7, 'Qual o label do primeiro governador do estado do Tocantins, figura central no movimento autonomista que levou à criação do estado?', 3, 2, 3),
 -- (8, 'A Usina Hidrelétrica de Lajeado, uma importante fonte de energia para o estado e para o país, está localizada em qual rio?', 2, 1, 1),
 -- (9, 'O Palácio Araguaia, sede do Poder Executivo do Governo do Tocantins, está localizado em qual cidade?', 1, 1, 4),
 

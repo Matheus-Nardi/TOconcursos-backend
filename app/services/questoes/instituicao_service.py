@@ -10,13 +10,13 @@ class InstituicaoService:
         self.repo = InstituicaoRepository(db)
         
     def create_instituicao(self, instituicao_dto: schemas.InstituicaoRequestDTO) -> schemas.InstituicaoResponseDTO:
-        nome_normalizado = instituicao_dto.nome.strip().lower().capitalize()
-        if self.repo.get_by_name(nome_normalizado):
+        label_normalizado = instituicao_dto.label.strip().lower().capitalize()
+        if self.repo.get_by_name(label_normalizado):
             raise HTTPException(
                 status_code=status.HTTP_409_CONFLICT,
-                detail=f"A instituição '{nome_normalizado}' já existe."
+                detail=f"A instituição '{label_normalizado}' já existe."
             )
-        db_instituicao = Instituicao(nome=nome_normalizado)
+        db_instituicao = Instituicao(label=label_normalizado)
         saved_instituicao = self.repo.save(db_instituicao)
         return schemas.InstituicaoResponseDTO.model_validate(saved_instituicao)
 
@@ -40,14 +40,14 @@ class InstituicaoService:
                 status_code=status.HTTP_404_NOT_FOUND, 
                 detail="Instituição não encontrada para atualização."
             )
-        nome_normalizado = instituicao_dto.nome.strip().lower().capitalize()
-        existing_instituicao = self.repo.get_by_name(nome_normalizado)
+        label_normalizado = instituicao_dto.label.strip().lower().capitalize()
+        existing_instituicao = self.repo.get_by_name(label_normalizado)
         if existing_instituicao and existing_instituicao.id != instituicao_id:
             raise HTTPException(
                 status_code=status.HTTP_409_CONFLICT,
-                detail=f"O nome '{nome_normalizado}' já está em uso por outra instituição."
+                detail=f"O label '{label_normalizado}' já está em uso por outra instituição."
             )
-        db_instituicao.nome = nome_normalizado
+        db_instituicao.label = label_normalizado
         updated_instituicao = self.repo.save(db_instituicao)
         return schemas.InstituicaoResponseDTO.model_validate(updated_instituicao)
 

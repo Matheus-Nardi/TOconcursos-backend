@@ -10,13 +10,13 @@ class DisciplinaService:
         self.repo = DisciplinaRepository(db)
         
     def create_disciplina(self, disciplina: schemas.DisciplinaRequestDTO) -> schemas.DisciplinaResponseDTO:
-        nome_normalizado = disciplina.nome.strip().lower().capitalize()
-        if self.repo.get_by_name(nome_normalizado):
+        label_normalizado = disciplina.label.strip().lower().capitalize()
+        if self.repo.get_by_name(label_normalizado):
             raise HTTPException(
                 status_code=status.HTTP_409_CONFLICT,
-                detail=f"A disciplina '{nome_normalizado}' já existe."
+                detail=f"A disciplina '{label_normalizado}' já existe."
             )
-        db_disciplina = Disciplina(nome=nome_normalizado)
+        db_disciplina = Disciplina(label=label_normalizado)
         saved_disciplina = self.repo.save(db_disciplina)
         return schemas.DisciplinaResponseDTO.model_validate(saved_disciplina)
 
@@ -40,14 +40,14 @@ class DisciplinaService:
                 status_code=status.HTTP_404_NOT_FOUND, 
                 detail="Disciplina não encontrada para atualização."
             )
-        nome_normalizado = disciplina_dto.nome.strip().lower().capitalize()
-        existing_disciplina = self.repo.get_by_name(nome_normalizado)
+        label_normalizado = disciplina_dto.label.strip().lower().capitalize()
+        existing_disciplina = self.repo.get_by_name(label_normalizado)
         if existing_disciplina and existing_disciplina.id != disciplina_id:
             raise HTTPException(
                 status_code=status.HTTP_409_CONFLICT,
-                detail=f"O nome '{nome_normalizado}' já está em uso por outra disciplina."
+                detail=f"O label '{label_normalizado}' já está em uso por outra disciplina."
             )
-        db_disciplina.nome = nome_normalizado
+        db_disciplina.label = label_normalizado
         updated_disciplina = self.repo.save(db_disciplina)
         return schemas.DisciplinaResponseDTO.model_validate(updated_disciplina)
 

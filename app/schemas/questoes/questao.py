@@ -17,6 +17,7 @@ class QuestaoRequestDTO(BaseModel):
     id_instituicao: int
     id_banca: int
     alternativas: list[AlternativaRequestDTO]  
+    ja_respondeu: bool = False
 
 class QuestaoResponseDTO(BaseModel):
     id: int
@@ -27,6 +28,7 @@ class QuestaoResponseDTO(BaseModel):
     instituicao: InstituicaoResponseDTO
     banca: BancaResponseDTO
     alternativas: list[AlternativaResponseDTO]
+    ja_respondeu: bool
 
     model_config = {
         "from_attributes": True

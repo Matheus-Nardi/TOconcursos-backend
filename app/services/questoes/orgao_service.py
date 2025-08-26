@@ -10,13 +10,13 @@ class OrgaoService:
         self.repo = OrgaoRepository(db)
         
     def create_orgao(self, orgao_dto: schemas.OrgaoRequestDTO) -> schemas.OrgaoResponseDTO:
-        nome_normalizado = orgao_dto.nome.strip().lower().capitalize()
-        if self.repo.get_by_name(nome_normalizado):
+        label_normalizado = orgao_dto.label.strip().lower().capitalize()
+        if self.repo.get_by_name(label_normalizado):
             raise HTTPException(
                 status_code=status.HTTP_409_CONFLICT,
-                detail=f"O órgão '{nome_normalizado}' já existe."
+                detail=f"O órgão '{label_normalizado}' já existe."
             )
-        db_orgao = Orgao(nome=nome_normalizado)
+        db_orgao = Orgao(label=label_normalizado)
         saved_orgao = self.repo.save(db_orgao)
         return schemas.OrgaoResponseDTO.model_validate(saved_orgao)
 
@@ -40,14 +40,14 @@ class OrgaoService:
                 status_code=status.HTTP_404_NOT_FOUND, 
                 detail="Órgão não encontrado para atualização."
             )
-        nome_normalizado = orgao_dto.nome.strip().lower().capitalize()
-        existing_orgao = self.repo.get_by_name(nome_normalizado)
+        label_normalizado = orgao_dto.label.strip().lower().capitalize()
+        existing_orgao = self.repo.get_by_name(label_normalizado)
         if existing_orgao and existing_orgao.id != orgao_id:
             raise HTTPException(
                 status_code=status.HTTP_409_CONFLICT,
-                detail=f"O nome '{nome_normalizado}' já está em uso por outro órgão."
+                detail=f"O label '{label_normalizado}' já está em uso por outro órgão."
             )
-        db_orgao.nome = nome_normalizado
+        db_orgao.label = label_normalizado
         updated_orgao = self.repo.save(db_orgao)
         return schemas.OrgaoResponseDTO.model_validate(updated_orgao)
 

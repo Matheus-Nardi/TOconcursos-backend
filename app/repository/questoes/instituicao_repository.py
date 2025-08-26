@@ -18,9 +18,9 @@ class InstituicaoRepository:
         """ Busca uma instituição pelo seu ID. """
         return self.db.get(models.Instituicao, instituicao_id)
 
-    def get_by_name(self, nome: str) -> models.Instituicao | None:
-        """ Busca uma instituição pelo nome. """
-        return self.db.query(models.Instituicao).filter(models.Instituicao.nome == nome).first()
+    def get_by_name(self, label: str) -> models.Instituicao | None:
+        """ Busca uma instituição pelo label. """
+        return self.db.query(models.Instituicao).filter(models.Instituicao.label == label).first()
 
     def get_all(self, skip: int = 0, limit: int = 100) -> list[models.Instituicao]:
         """ 

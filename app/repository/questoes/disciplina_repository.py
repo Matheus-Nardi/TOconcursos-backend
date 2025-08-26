@@ -18,9 +18,9 @@ class DisciplinaRepository:
         """ Busca uma disciplina pelo seu ID. """
         return self.db.get(models.Disciplina, disciplina_id)
 
-    def get_by_name(self, nome: str) -> models.Disciplina | None:
-        """ Busca uma disciplina pelo nome. """
-        return self.db.query(models.Disciplina).filter(models.Disciplina.nome == nome).first()
+    def get_by_name(self, label: str) -> models.Disciplina | None:
+        """ Busca uma disciplina pelo label. """
+        return self.db.query(models.Disciplina).filter(models.Disciplina.label == label).first()
 
     def get_all(self, skip: int = 0, limit: int = 100) -> list[models.Disciplina]:
         """ Retorna uma lista de disciplinas com paginação. """
