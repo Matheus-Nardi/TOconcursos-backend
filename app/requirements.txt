@@ -24,3 +24,5 @@ httpx
 # Autenticação e segurança
 passlib[bcrypt]
 python-jose
+
+
