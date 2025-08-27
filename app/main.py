@@ -45,3 +45,5 @@ app.include_router(questao_router.router)
 app.include_router(usuario_router.router)
 
 app.include_router(auth_router.router)
+
+app.include_router(auth_router.router)
