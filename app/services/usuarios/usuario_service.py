@@ -2,6 +2,7 @@ from sqlalchemy.orm import Session
 from models.usuarios.usuario import Usuario
 from repository.usuarios.usuario_repository import UsuarioRepository
 from schemas.usuarios.usuario import UsuarioRequestDTO, UsuarioResponseDTO
+from utils.security import hash_password, verify_password, create_access_token
 
 class UsuarioService:
     def __init__(self, db: Session):
@@ -13,7 +14,7 @@ class UsuarioService:
             email=usuario.email,
             cpf=usuario.cpf,
             avatar=usuario.avatar,
-            senha=usuario.senha
+            senha=hash_password(usuario.senha)
         )
         db_usuario = self.repo.create_usuario(db_usuario)
         return UsuarioResponseDTO.model_validate(db_usuario).model_dump(mode="json")
@@ -37,3 +38,10 @@ class UsuarioService:
 
     def delete_usuario(self, usuario_id: int) -> bool:
         return self.repo.delete_usuario(usuario_id)
+    
+    def authenticate_usuario(self, email: str, senha: str) -> str | None:
+        usuarios = self.repo.db.query(Usuario).filter(Usuario.email == email).first()
+        if usuarios and verify_password(senha, usuarios.senha):
+            token_data = {"sub": str(usuarios.id), "email": usuarios.email}
+            return create_access_token(token_data)
+        return None

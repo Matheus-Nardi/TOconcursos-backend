@@ -8,7 +8,7 @@ uvicorn[standard]
 pydantic
 
 # ORM / Banco de dados
-sqlalchemy
+SQLAlchemy
 
 # Variáveis de ambiente
 python-dotenv
@@ -20,3 +20,7 @@ alembic
 pytest
 pytest-asyncio
 httpx
+
+# Autenticação e segurança
+passlib[bcrypt]
+python-jose
