@@ -1,8 +1,9 @@
-from database import Base
-from sqlalchemy import Column, Integer, String
+import enum
 
-class Dificuldade(Base):
-    __tablename__ = "dificuldades"
-
-    id = Column(Integer, primary_key=True, index=True)
-    nome = Column(String)
+class DificuldadeEnum(str, enum.Enum):
+    """
+    Enum para os níveis de dificuldade das questões.
+    """
+    FACIL = "facil"
+    MEDIO = "medio"
+    DIFICIL = "dificil"

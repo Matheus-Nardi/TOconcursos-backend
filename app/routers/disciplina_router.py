@@ -94,16 +94,11 @@ def delete_disciplina(
     disciplina_id: int,
     service: DisciplinaService = Depends(get_disciplina_service),
 ):
-    if service.delete_disciplina(disciplina_id):
-        return response_dto(
-            data=None,
-            status="success",
-            message="Disciplina deleted successfully",
-            http_code=status.HTTP_204_NO_CONTENT
-        )
+
+    service.delete_disciplina(disciplina_id)
     return response_dto(
         data=None,
-        status="error",
-        message="Disciplina not found",
-        http_code=status.HTTP_404_NOT_FOUND
-    )
+        status="success",
+        message="Disciplina deleted successfully",
+        http_code=status.HTTP_204_NO_CONTENT
+        )

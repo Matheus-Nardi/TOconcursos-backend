@@ -1,11 +1,11 @@
 from pydantic import BaseModel
 
 class BancaRequestDTO(BaseModel):
-    nome: str
+    label: str
     
 class BancaResponseDTO(BaseModel):
     id: int
-    nome: str
+    label: str
 
     model_config = {
         "from_attributes": True

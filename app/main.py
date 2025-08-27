@@ -27,9 +27,10 @@ def on_startup():
         print("Script import.sql executado com sucesso!")
     except Exception as e:
         print(f"Erro ao executar o script SQL: {e}")
-from routers import disciplina_router, orgao_router, instituicao_router, banca_router, questao_router, usuario_router, auth_router
+from routers import disciplina_router, orgao_router, instituicao_router, banca_router, questao_router, auth_router, usuario_router
 
 Base.metadata.create_all(bind=engine)
+
 
 app.include_router(disciplina_router.router)
 

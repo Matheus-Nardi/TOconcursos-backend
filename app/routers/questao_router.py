@@ -1,4 +1,5 @@
 
+from schemas.questoes.filtro_questao import FiltroRequestDTO
 from fastapi import APIRouter, Depends, status, HTTPException
 from sqlalchemy.orm import Session
 from database import SessionLocal
@@ -35,6 +36,40 @@ def create_questao(
     )
 
 
+
+
+
+@router.get("/")
+def get_all_questaos(
+    skip: int = 0,
+    limit: int = 10,
+    service: QuestaoService = Depends(get_questao_service),
+):
+    questaos = service.get_all_questaos(skip=skip, limit=limit)
+    return response_dto(
+        data=questaos,
+        status="success",
+        message="Questaos retrieved successfully",
+        http_code=status.HTTP_200_OK
+    )
+
+
+@router.get("/filtros")
+def get_all_questaos_filter(
+    filtro: FiltroRequestDTO = Depends(),
+    skip: int = 0,
+    limit: int = 10,
+    service: QuestaoService = Depends(get_questao_service),
+):
+    questaos = service.filter_questao(filtro=filtro, skip=skip, limit=limit)
+    return response_dto(
+        data=questaos,
+        status="success",
+        message="Questaos retrieved successfully",
+        http_code=status.HTTP_200_OK
+    )
+
+
 @router.get("/{questao_id}")
 def get_questao_by_id(
     questao_id: int,
@@ -54,22 +89,6 @@ def get_questao_by_id(
         message="Questao not found",
         http_code=status.HTTP_404_NOT_FOUND
     )
-
-
-@router.get("/")
-def get_all_questaos(
-    skip: int = 0,
-    limit: int = 10,
-    service: QuestaoService = Depends(get_questao_service),
-):
-    questaos = service.get_all_questaos(skip=skip, limit=limit)
-    return response_dto(
-        data=questaos,
-        status="success",
-        message="Questaos retrieved successfully",
-        http_code=status.HTTP_200_OK
-    )
-
 
 @router.put("/{questao_id}")
 def update_questao(
@@ -98,16 +117,10 @@ def delete_questao(
     questao_id: int,
     service: QuestaoService = Depends(get_questao_service),
 ):
-    if service.delete_questao(questao_id):
-        return response_dto(
-            data=None,
-            status="success",
-            message="Questao deleted successfully",
-            http_code=status.HTTP_204_NO_CONTENT
-        )
+    service.delete_questao(questao_id)
     return response_dto(
         data=None,
-        status="error",
-        message="Questao not found",
-        http_code=status.HTTP_404_NOT_FOUND
-    )
+        status="success",
+        message="Questao deleted successfully",
+        http_code=status.HTTP_204_NO_CONTENT
+        )

@@ -96,16 +96,10 @@ def delete_instituicao(
     instituicao_id: int,
     service: InstituicaoService = Depends(get_instituicao_service),
 ):
-    if service.delete_instituicao(instituicao_id):
-        return response_dto(
-            data=None,
-            status="success",
-            message="Instituicao deleted successfully",
-            http_code=status.HTTP_204_NO_CONTENT
-        )
+    service.delete_instituicao(instituicao_id)
     return response_dto(
         data=None,
-        status="error",
-        message="Instituicao not found",
-        http_code=status.HTTP_404_NOT_FOUND
-    )
+        status="success",
+        message="Instituicao deleted successfully",
+        http_code=status.HTTP_204_NO_CONTENT
+        )

@@ -1,11 +1,11 @@
 from pydantic import BaseModel
 
 class DisciplinaRequestDTO(BaseModel):
-    nome: str
+    label: str
     
 class DisciplinaResponseDTO(BaseModel):
     id: int
-    nome: str
+    label: str
 
     model_config = {
         "from_attributes": True

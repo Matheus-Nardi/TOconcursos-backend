@@ -96,16 +96,10 @@ def delete_orgao(
     orgao_id: int,
     service: OrgaoService = Depends(get_orgao_service),
 ):
-    if service.delete_orgao(orgao_id):
-        return response_dto(
-            data=None,
-            status="success",
-            message="Orgao deleted successfully",
-            http_code=status.HTTP_204_NO_CONTENT
-        )
+    service.delete_orgao(orgao_id)
     return response_dto(
         data=None,
-        status="error",
-        message="Orgao not found",
-        http_code=status.HTTP_404_NOT_FOUND
-    )
+        status="success",
+        message="Orgao deleted successfully",
+        http_code=status.HTTP_204_NO_CONTENT
+        )

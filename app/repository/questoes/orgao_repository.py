@@ -1,43 +1,35 @@
 from sqlalchemy.orm import Session
 from models.questoes import orgao as models
-from schemas.questoes import orgao as schemas
 
 class OrgaoRepository:
     def __init__(self, db: Session):
         self.db = db
-        
-    def create_orgao(self, orgao: schemas.OrgaoRequestDTO) -> models.Orgao:
-        db_orgao = models.Orgao(nome=orgao.nome)
-        self.db.add(db_orgao)
-        self.db.commit()
-        self.db.refresh(db_orgao)
-        return db_orgao
 
-    def get_orgao_by_name(self, nome: str) -> models.Orgao:
-        return self.db.query(models.Orgao).filter(models.Orgao.nome == nome).first()
-    
-    def get_orgao(self, orgao_id: int) -> models.Orgao:
+    def save(self, orgao: models.Orgao) -> models.Orgao:
+        """
+        Salva uma instância de Orgao (cria ou atualiza).
+        """
+        self.db.add(orgao)
+        self.db.commit()
+        self.db.refresh(orgao)
+        return orgao
+
+    def get_by_id(self, orgao_id: int) -> models.Orgao | None:
+        """ Busca um órgão pelo seu ID. """
         return self.db.get(models.Orgao, orgao_id)
 
-    def get_all_orgaos(self) -> list[models.Orgao]:
-        return self.db.query(models.Orgao).all()
-    
-    def get_all_orgaos(self, skip: int = 0, limit: int = 10) -> list[models.Orgao]:
+    def get_by_name(self, label: str) -> models.Orgao | None:
+        """ Busca um órgão pelo label. """
+        return self.db.query(models.Orgao).filter(models.Orgao.label == label).first()
+
+    def get_all(self, skip: int = 0, limit: int = 100) -> list[models.Orgao]:
+        """ 
+        Retorna uma lista de órgãos com paginação.
+        (Corrigido: unificando os métodos 'get_all_orgaos').
+        """
         return self.db.query(models.Orgao).offset(skip).limit(limit).all()
 
-    def update_orgao(self, orgao_id: int, orgao: schemas.OrgaoRequestDTO) -> models.Orgao:
-        db_orgao = self.get_orgao(orgao_id)
-        if db_orgao:
-            db_orgao.nome = orgao.nome
-            self.db.commit()
-            self.db.refresh(db_orgao)
-        return db_orgao
-
-    def delete_orgao(self, orgao_id: int) -> bool:
-        db_orgao = self.get_orgao(orgao_id)
-        if db_orgao:
-            self.db.delete(db_orgao)
-            self.db.commit()
-            return True
-        else:
-            return False
+    def delete(self, orgao: models.Orgao) -> None:
+        """ Deleta uma instância de Orgao. """
+        self.db.delete(orgao)
+        self.db.commit()
