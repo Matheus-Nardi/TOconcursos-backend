@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 from models.questoes import questao as models
 from schemas.questoes import questao as schemas
+from schemas.questoes.filtro_questao import FiltroRequestDTO 
 
 class QuestaoRepository:
     def __init__(self, db: Session):
@@ -41,3 +42,21 @@ class QuestaoRepository:
             return True
         else:
             return False
+
+    def filter_questao(self, filtro: FiltroRequestDTO, skip: int = 0, limit: int = 10) -> list[models.Questao]:
+        query = self.db.query(models.Questao)
+
+        if filtro.ja_respondeu is not None:
+            query = query.filter(models.Questao.ja_respondeu == filtro.ja_respondeu)
+        if filtro.id_disciplina is not None:
+            query = query.filter(models.Questao.id_disciplina == filtro.id_disciplina)
+        if filtro.dificuldade is not None:
+            query = query.filter(models.Questao.dificuldade == filtro.dificuldade)
+        if filtro.id_banca is not None:
+            query = query.filter(models.Questao.id_banca == filtro.id_banca)
+        if filtro.id_orgao is not None:
+            query = query.filter(models.Questao.id_orgao == filtro.id_orgao)
+        if filtro.id_instituicao is not None:
+            query = query.filter(models.Questao.id_instituicao == filtro.id_instituicao)
+
+        return query.offset(skip).limit(limit).all()

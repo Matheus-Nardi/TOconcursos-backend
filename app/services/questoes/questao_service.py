@@ -6,6 +6,7 @@ from repository.questoes.disciplina_repository import DisciplinaRepository
 from repository.questoes.orgao_repository import OrgaoRepository
 from repository.questoes.instituicao_repository import InstituicaoRepository
 from repository.questoes.banca_repository import BancaRepository
+from schemas.questoes.filtro_questao import FiltroRequestDTO
 
 from models.questoes import alternativa as models
 class QuestaoService:
@@ -67,3 +68,9 @@ class QuestaoService:
     # Futuramente um soft delete
     def delete_questao(self, questao_id: int) -> bool:
         return self.repo.delete_questao(questao_id)
+    
+
+    def filter_questao(self, filtro: FiltroRequestDTO, skip: int = 0, limit: int = 10) -> list[schemas.QuestaoResponseDTO]:
+        questoes = self.repo.filter_questao(filtro=filtro, skip=skip, limit=limit)
+        return [schemas.QuestaoResponseDTO.model_validate(d) for d in questoes]
+ 
