@@ -15,6 +15,5 @@ class EstudoDiario(Base):
     id_disciplina = Column(Integer, ForeignKey("disciplinas.id"))
     disciplina = relationship("Disciplina")
 
-
-    id_estudo_diario = Column(Integer, ForeignKey("estudos_diarios.id"))
-    estudo_diario = relationship("EstudoDiario")
+    id_cronograma = Column(Integer, ForeignKey("cronogramas.id"))
+    cronograma = relationship("Cronograma")
