@@ -16,5 +16,5 @@ class UsuarioResponseDTO(UsuarioBaseDTO):
     class Config:
         from_attributes = True
         json_encoders = {
-            datetime: lambda v: v.isoformat()  # garante que datetime vire string ISO
+            datetime: lambda v: v.isoformat()
         }

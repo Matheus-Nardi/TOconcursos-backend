@@ -24,3 +24,4 @@ class Questao(Base):
     banca = relationship("Banca")
 
     alternativas = relationship("Alternativa", cascade="all, delete-orphan")
+    resolucoes = relationship("ResolucaoQuestao", back_populates="questao", cascade="all, delete-orphan")

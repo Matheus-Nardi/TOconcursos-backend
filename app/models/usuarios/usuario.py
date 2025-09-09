@@ -1,6 +1,7 @@
 from database import Base
 from sqlalchemy import Column, String, DateTime, Integer
 from datetime import datetime
+from sqlalchemy.orm import relationship
 
 class Usuario(Base):
     __tablename__ = "usuarios"
@@ -12,3 +13,6 @@ class Usuario(Base):
     avatar = Column(String, nullable=True)
     senha = Column(String, nullable=False)
     data_criacao = Column(DateTime, default=datetime.utcnow)
+    historicos = relationship("Historico", back_populates="usuario", cascade="all, delete-orphan")
+    historicos_simulados = relationship("HistoricoSimulado", back_populates="usuario", cascade="all, delete-orphan")
+
