@@ -57,8 +57,6 @@ app.include_router(usuario_router.router)
 
 app.include_router(auth_router.router)
 
-app.include_router(auth_router.router)
-
 app.include_router(cronograma_router.router)
 
 app.include_router(historico_router.router)
