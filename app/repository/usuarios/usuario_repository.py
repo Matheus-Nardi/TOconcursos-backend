@@ -13,6 +13,8 @@ class UsuarioRepository:
 
     def get_usuario(self, usuario_id: str) -> Usuario | None:
         return self.db.query(Usuario).filter(Usuario.id == usuario_id).first()
+    
+    
 
     def get_all_usuarios(self, skip: int = 0, limit: int = 10) -> list[Usuario]:
         return self.db.query(Usuario).offset(skip).limit(limit).all()

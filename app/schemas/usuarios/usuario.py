@@ -11,6 +11,7 @@ class UsuarioRequestDTO(UsuarioBaseDTO):
     senha: str
 
 class UsuarioResponseDTO(UsuarioBaseDTO):
+    id: int
     data_criacao: datetime
 
     class Config:

@@ -23,5 +23,7 @@ class Questao(Base):
     id_banca = Column(Integer, ForeignKey("bancas.id"))
     banca = relationship("Banca")
 
+    comentarios = relationship("Comentario", back_populates="questao")
+
     alternativas = relationship("Alternativa", cascade="all, delete-orphan")
     resolucoes = relationship("ResolucaoQuestao", back_populates="questao", cascade="all, delete-orphan")
