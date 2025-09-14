@@ -46,7 +46,7 @@ Para executar o projeto em seu ambiente local, siga os passos abaixo.
 
 ## Documentação Completa
 
-Para uma visão mais aprofundada da arquitetura, decisões de design e detalhes de implementação, consulte a documentação completa em formato PDF:
+Para uma visão mais aprofundada do projeto, como requisitos, diagramas e protótipo acesse o pdf
 
 [TOConcursos docs](https://github.com/Matheus-Nardi/TOconcursos-backend/blob/main/app/docs/Documenta%C3%A7%C3%A3o%20TOCONCURSOS.pdf)
 
