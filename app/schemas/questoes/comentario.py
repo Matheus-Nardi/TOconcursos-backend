@@ -4,7 +4,6 @@ from schemas.usuarios.usuario import UsuarioResponseDTO
 
 class ComentarioRequestDTO(BaseModel):
     comentario: str
-    data_comentario: datetime
     id_questao: int
 
 class ComentarioResponseDTO(BaseModel):

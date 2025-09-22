@@ -7,7 +7,7 @@ from repository.questoes.questao_repository import QuestaoRepository
 from fastapi import HTTPException
 from schemas.usuarios.usuario import UsuarioResponseDTO
 from starlette import status
-
+from datetime import datetime
 class ComentarioService:
     def __init__(self, db: Session):
         self.repo = ComentarioRepository(db)
@@ -19,7 +19,7 @@ class ComentarioService:
 
         db_comentario = Comentario(
             comentario=comentario_dto.comentario,
-            data_comentario=comentario_dto.data_comentario,
+            data_comentario= datetime.now(),
             questao=questao_db,
             usuario=user_db
         )

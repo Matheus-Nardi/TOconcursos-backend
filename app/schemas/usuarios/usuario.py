@@ -19,3 +19,4 @@ class UsuarioResponseDTO(UsuarioBaseDTO):
         json_encoders = {
             datetime: lambda v: v.isoformat()
         }
+    
