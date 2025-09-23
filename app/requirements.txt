@@ -1,6 +1,8 @@
 # Framework FastAPI
 fastapi
 
+fastapi-mail
+
 # Servidor ASGI
 uvicorn[standard]
 
@@ -12,6 +14,8 @@ SQLAlchemy
 
 # Variáveis de ambiente
 python-dotenv
+
+pydantic[email]
 
 # Migrações de banco (opcional)
 alembic

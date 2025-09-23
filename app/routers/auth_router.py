@@ -7,6 +7,7 @@ from services.usuarios.usuario_service import UsuarioService
 from shared.response import response_dto
 from utils.security import decode_access_token
 from schemas.auth.auth import LoginRequestDTO, TokenResponseDTO, MeResponseDTO
+from schemas.auth.auth import ForgotPasswordRequestDTO, ResetPasswordRequestDTO
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
 
@@ -68,5 +69,37 @@ def read_me(current_user: dict = Depends(get_current_user)):
         data=current_user,
         status="success",
         message="Usuário autenticado",
+        http_code=status.HTTP_200_OK
+    )
+
+@router.post("/forgot-password", status_code=status.HTTP_200_OK)
+async def forgot_password(
+    request: ForgotPasswordRequestDTO,
+    service: UsuarioService = Depends(get_usuario_service),
+):
+    await service.request_password_reset(request.email)
+    return response_dto(
+        data=None,
+        status="success",
+        message="Se um usuário com este e-mail existir, um código de redefinição foi enviado.",
+        http_code=status.HTTP_200_OK
+    )
+
+@router.post("/reset-password", status_code=status.HTTP_200_OK)
+def reset_password(
+    request: ResetPasswordRequestDTO,
+    service: UsuarioService = Depends(get_usuario_service),
+):
+    success = service.reset_password(token=request.token, new_password=request.new_password)
+    if not success:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Código inválido ou expirado."
+        )
+    
+    return response_dto(
+        data=None,
+        status="success",
+        message="Senha redefinida com sucesso.",
         http_code=status.HTTP_200_OK
     )

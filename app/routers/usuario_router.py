@@ -1,3 +1,4 @@
+from http.client import HTTPException
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 from database import SessionLocal

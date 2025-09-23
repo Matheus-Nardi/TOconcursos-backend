@@ -1,3 +1,6 @@
+import secrets
+from datetime import datetime, timedelta, timezone
+from utils.email_sender import send_reset_email
 from sqlalchemy.orm import Session
 from models.usuarios.usuario import Usuario
 from repository.usuarios.usuario_repository import UsuarioRepository
@@ -45,3 +48,42 @@ class UsuarioService:
             token_data = {"sub": str(usuarios.id), "email": usuarios.email}
             return create_access_token(token_data)
         return None
+    
+    # NOVO MÉTODO 👇
+    async def request_password_reset(self, email: str):
+        """Gera um token de reset e o envia por e-mail."""
+        usuario = self.repo.get_usuario_by_email(email)
+        if not usuario:
+            # Para evitar que um atacante descubra e-mails válidos,
+            # não retornamos um erro. A operação simplesmente termina.
+            return
+
+        # Gera um código seguro e aleatório
+        reset_token = secrets.token_urlsafe(32)
+        
+        # Define o tempo de expiração (e.g., 15 minutos)
+        expires_at = datetime.now(timezone.utc) + timedelta(minutes=15)
+
+        usuario.reset_token = reset_token
+        usuario.reset_token_expires = expires_at
+        
+        self.repo.db.commit()
+
+        await send_reset_email(recipient_email=usuario.email, reset_code=reset_token)
+
+    # NOVO MÉTODO 👇
+    def reset_password(self, token: str, new_password: str) -> bool:
+        """Valida o token e redefine a senha do usuário."""
+        usuario = self.repo.get_usuario_by_reset_token(token)
+
+        # Verifica se o token existe e se não expirou
+        if not usuario or usuario.reset_token_expires is None or usuario.reset_token_expires < datetime.utcnow():
+            return False
+
+        # Atualiza a senha e invalida o token
+        usuario.senha = hash_password(new_password)
+        usuario.reset_token = None
+        usuario.reset_token_expires = None
+        
+        self.repo.db.commit()
+        return True

@@ -16,4 +16,5 @@ class Usuario(Base):
     historicos = relationship("Historico", back_populates="usuario", cascade="all, delete-orphan")
     historicos_simulados = relationship("HistoricoSimulado", back_populates="usuario", cascade="all, delete-orphan")
     comentarios = relationship("Comentario", back_populates="usuario")
-
+    reset_token = Column(String, unique=True, index=True, nullable=True)
+    reset_token_expires = Column(DateTime, nullable=True)
