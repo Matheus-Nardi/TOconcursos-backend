@@ -7,7 +7,7 @@ from schemas.questoes.disciplina import DisciplinaResponseDTO
 from schemas.questoes.orgao import OrgaoResponseDTO
 from schemas.questoes.instituicao import InstituicaoResponseDTO
 from schemas.questoes.banca import BancaResponseDTO
-
+from schemas.questoes.comentario import ComentarioResponseDTO
 
 class QuestaoRequestDTO(BaseModel):
     enunciado: str
@@ -29,6 +29,7 @@ class QuestaoResponseDTO(BaseModel):
     banca: BancaResponseDTO
     alternativas: list[AlternativaResponseDTO]
     ja_respondeu: bool
+    comentarios: list[ComentarioResponseDTO] = []
 
     model_config = {
         "from_attributes": True

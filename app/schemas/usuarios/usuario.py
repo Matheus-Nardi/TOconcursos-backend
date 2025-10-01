@@ -12,11 +12,13 @@ class UsuarioRequestDTO(UsuarioBaseDTO):
     senha: str
 
 class UsuarioResponseDTO(UsuarioBaseDTO):
+    id: int
     data_criacao: datetime
     cronogramas: list[CronogramaResponseDTO] = []
 
     class Config:
         from_attributes = True
         json_encoders = {
-            datetime: lambda v: v.isoformat()  # garante que datetime vire string ISO
+            datetime: lambda v: v.isoformat()
         }
+    

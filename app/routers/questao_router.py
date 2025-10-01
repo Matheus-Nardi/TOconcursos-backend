@@ -70,6 +70,8 @@ def get_all_questaos_filter(
     )
 
 
+
+
 @router.get("/{questao_id}")
 def get_questao_by_id(
     questao_id: int,
@@ -89,6 +91,21 @@ def get_questao_by_id(
         message="Questao not found",
         http_code=status.HTTP_404_NOT_FOUND
     )
+
+
+@router.get("/{questao_id}/comentarios")
+def get_comentarios_by_questao_id(
+    questao_id: int,
+    service: QuestaoService = Depends(get_questao_service),
+):
+    comentarios = service.get_all_comentarios(questao_id)
+    return response_dto(
+        data=comentarios,
+        status="success",
+        message="Comentarios retrieved successfully",
+        http_code=status.HTTP_200_OK
+    )
+
 
 @router.put("/{questao_id}")
 def update_questao(

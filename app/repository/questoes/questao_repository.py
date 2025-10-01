@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 from models.questoes import questao as models
 from schemas.questoes import questao as schemas
 from schemas.questoes.filtro_questao import FiltroRequestDTO 
-
+from models.questoes.comentario import Comentario
 class QuestaoRepository:
     def __init__(self, db: Session):
         self.db = db
@@ -25,6 +25,9 @@ class QuestaoRepository:
     
     def get_all_questaos(self, skip: int = 0, limit: int = 10) -> list[models.Questao]:
         return self.db.query(models.Questao).offset(skip).limit(limit).all()
+
+    def get_all_comentarios(self, questao_id: int) -> list[Comentario]:
+        return self.db.query(Comentario).filter(Comentario.id_questao == questao_id).all()
 
     def update_questao(self, questao_id: int, questao: schemas.QuestaoRequestDTO) -> models.Questao:
         db_questao = self.get_questao(questao_id)
