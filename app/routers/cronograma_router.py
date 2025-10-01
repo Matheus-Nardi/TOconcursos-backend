@@ -5,8 +5,8 @@ from database import SessionLocal
 from services.cronograma.cronograma_service import CronogramaService
 from schemas.cronograma import cronograma as schemas
 from shared.response import response_dto
-
-
+from shared.get_current_user import get_current_user
+from models.usuarios.usuario import Usuario
 router = APIRouter(prefix="/cronogramas", tags=["Cronogramas"])
 
 # Dependência para o DB
@@ -25,8 +25,10 @@ def get_cronograma_service(db: Session = Depends(get_db)):
 def create_cronograma(
     cronograma: schemas.CronogramaRequestDTO,
     service: CronogramaService = Depends(get_cronograma_service),
+    current_user: Usuario = Depends(get_current_user)
 ):
-    created_cronograma = service.create_cronograma(cronograma)
+    created_cronograma = service.create_cronograma(current_user.id, cronograma)
+    print(current_user)
     return response_dto(
         data=created_cronograma,
         status="success",

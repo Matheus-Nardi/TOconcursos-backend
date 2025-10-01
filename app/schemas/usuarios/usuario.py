@@ -1,3 +1,4 @@
+from schemas.cronograma.cronograma import CronogramaResponseDTO
 from pydantic import BaseModel
 from datetime import datetime
 
@@ -12,6 +13,7 @@ class UsuarioRequestDTO(UsuarioBaseDTO):
 
 class UsuarioResponseDTO(UsuarioBaseDTO):
     data_criacao: datetime
+    cronogramas: list[CronogramaResponseDTO] = []
 
     class Config:
         from_attributes = True

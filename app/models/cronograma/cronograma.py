@@ -12,3 +12,8 @@ class Cronograma(Base):
     descricao = Column(String, nullable=False)
     data_criacao = Column(DateTime, nullable=False)
     estudos_diarios = relationship("EstudoDiario", cascade="all, delete-orphan")
+
+   
+    usuario_id = Column(Integer, ForeignKey("usuarios.id")) 
+
+    usuario = relationship("Usuario", back_populates="cronogramas")

@@ -1,3 +1,4 @@
+
 from schemas.cronograma import cronograma as schemas
 from sqlalchemy.orm import Session
 from models.cronograma.cronograma import Cronograma
@@ -5,19 +6,24 @@ from repository.cronograma.cronograma_repository import CronogramaRepository
 from repository.questoes.disciplina_repository import DisciplinaRepository
 from datetime import datetime
 from models.cronograma import estudo_diario as models
+from repository.usuarios.usuario_repository import UsuarioRepository
 
 class CronogramaService:
     def __init__(self, db: Session):
         self.repo = CronogramaRepository(db)
         self.disciplina_repo = DisciplinaRepository(db)
+        self.usuario_repo = UsuarioRepository(db)
 
-    def create_cronograma(self, cronograma: schemas.CronogramaRequestDTO) -> schemas.CronogramaResponseDTO:
-        
+    def create_cronograma(self, user_id: int, cronograma: schemas.CronogramaRequestDTO) -> schemas.CronogramaResponseDTO:
+
         for estudo in cronograma.estudos_diarios:
             if estudo.hora_fim <= estudo.hora_inicio:
                 raise ValueError("hora_fim deve ser maior que hora_inicio")
             
-            
+        db_user = self.usuario_repo.get_usuario(user_id)
+        if not db_user:
+            raise ValueError("Usuário não encontrado")
+        
         db_estudos_diarios = [
             models.EstudoDiario(
                 hora_inicio=estudo.hora_inicio,
@@ -31,7 +37,8 @@ class CronogramaService:
             nome=cronograma.nome,
             descricao=cronograma.descricao,
             data_criacao=datetime.now(),
-            estudos_diarios=db_estudos_diarios
+            estudos_diarios=db_estudos_diarios,
+            usuario=db_user
         )
 
         db_cronograma = self.repo.create_cronograma(db_cronograma)
