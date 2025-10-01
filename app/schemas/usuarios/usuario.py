@@ -11,6 +11,7 @@ class UsuarioRequestDTO(UsuarioBaseDTO):
     senha: str
 
 class UsuarioResponseDTO(UsuarioBaseDTO):
+    id: int
     data_criacao: datetime
 
     class Config:
@@ -18,3 +19,4 @@ class UsuarioResponseDTO(UsuarioBaseDTO):
         json_encoders = {
             datetime: lambda v: v.isoformat()
         }
+    

@@ -7,6 +7,8 @@ from repository.questoes.orgao_repository import OrgaoRepository
 from repository.questoes.instituicao_repository import InstituicaoRepository
 from repository.questoes.banca_repository import BancaRepository
 from schemas.questoes.filtro_questao import FiltroRequestDTO
+from schemas.questoes.comentario import ComentarioResponseDTO
+
 
 from models.questoes import alternativa as models
 class QuestaoService:
@@ -63,7 +65,11 @@ class QuestaoService:
     def get_all_questaos(self, skip, limit) -> list[schemas.QuestaoResponseDTO]:
         questaos = self.repo.get_all_questaos(skip=skip, limit=limit)
         return [schemas.QuestaoResponseDTO.model_validate(d) for d in questaos]
-
+    
+    def get_all_comentarios(self, questao_id: int) -> list[ComentarioResponseDTO]:
+        comentarios = self.repo.get_all_comentarios(questao_id)
+        return [ComentarioResponseDTO.model_validate(c) for c in comentarios]
+    
 
     # Futuramente um soft delete
     def delete_questao(self, questao_id: int) -> bool:
