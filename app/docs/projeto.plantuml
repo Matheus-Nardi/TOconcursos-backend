@@ -1,0 +1,211 @@
+@startuml Projeto Integrador I
+
+class Questao {
+    - codigo: String
+    - enunciado: String
+}
+
+class Alternativa {
+    - descricao: String
+    - isCorreta: Boolean
+}
+
+class Banca {
+    - nome: String
+}
+
+class Disciplina {
+    - nome: String
+}
+
+class Orgao {
+    - nome: String
+}
+
+class Instituicao {
+    - nome: String
+}
+
+class Dificuldade {
+    - nome: String
+}
+
+class ResolucaoQuestao {
+    - dataResolucao: LocalDateTime
+    - isCerta: Boolean
+}
+
+class Usuario {
+    - nome: String
+    - email: String
+    - cpf: String
+    - avatar: String
+    - senha: String
+    - dataCriacao: LocalDateTime 
+}
+
+class Historico {
+    - diasSequencia: Integer
+}
+
+class Endereco {
+    - cep: String
+    - logradouro: String
+    - complemento: String
+    - bairro: String
+}
+
+class Telefone {
+    - codigoArea: String
+    - numero: String
+}
+
+class Estado {
+    - nome: String 
+    - sigla: String
+}
+
+class Cidade {
+    - nome
+}
+
+class Comentario{
+    - comentario: String
+    - dataComentario: LocalDateTime
+    
+}
+
+class Beneficio{
+    - beneficio: String
+}
+
+class Plano{
+    - nome: String
+    - valor: Double
+}
+
+class Pagamento{
+    
+}
+
+class Boleto{
+    - codigoBarras: String
+    - dataValidade: LocalDate
+}
+
+class Pix{
+    - chave: String
+    - dataValidade: LocalDateTime
+}
+
+class Cartao {
+    - titular: String
+    - numero: String
+    - cvv: Integer
+}
+
+enum TipoCartao {
+    - CREDITO: int
+    - DEBITO: int
+}
+
+class Simulado{
+    - nome: String
+    - duracao: LocalTime 
+    - qtdQuestoes: Integer
+    - dataCriacao: LocalDateTime
+}
+
+class HistoricoSimulado {
+    - dataResolucao: LocalDateTime
+}
+
+class ResolucaoQuestaoSimulado {
+    - alternativaEscolhida: Alternativa
+    - alternativaCorreta: Alternativa
+    - isCerta: Boolean
+}
+
+class Cronometro {
+    - isPausado: Boolean
+    - dataInicio: LocalDateTime
+    - dataPausa: LocalDateTime
+    - duracaoDefinida: LocalTime
+}
+
+class Cronograma{
+    - nome: String
+    - descricao: String
+    - dataCriacao: LocalDateTime
+}
+
+enum DiaSemana{
+    + DOMINGO: int 
+    + SEGUNDA: int
+    + TERCA: int
+    + QUARTA: int
+    + QUINTA: int 
+    + SEXTA: int
+    + SABADO: int
+}
+
+
+class EstudoDiario{ 
+    - horaInicio: LocalTime
+    - horaFim: LocalTime
+}
+
+''RELACIONAMENTOS
+Usuario "1" *--> "1" Telefone
+Usuario "1" *--> "1" Endereco
+Usuario "1" *--> "1" Historico
+Usuario "1" *--> "1" HistoricoSimulado
+Usuario "1" --> "1" Plano
+
+
+Cartao "1" *--> "1" TipoCartao
+
+
+Historico "1" o--> "*" ResolucaoQuestao
+
+Plano "1" --> "*" Beneficio
+
+Plano "1" --> "1" Pagamento
+    
+Cidade "1" o--> "1" Estado
+
+Endereco "*" o--> "1" Cidade
+
+Simulado "1" o--> "*" Questao
+Simulado "1"  *-->  "1" Cronometro
+
+ResolucaoQuestaoSimulado "*" --> "*" Simulado
+
+HistoricoSimulado "*" o--> "*" ResolucaoQuestaoSimulado
+
+Questao "*" o--> "1" Banca
+Questao "*" o--> "1" Disciplina
+Questao "1" *--> "*" Alternativa
+Questao "*" o--> "1" Orgao
+Questao "*" o--> "1" Instituicao
+Questao "*" o--> "1" Dificuldade
+Questao "1" *--> "*" Comentario
+
+ResolucaoQuestao "*" --> "1" Questao
+
+Pagamento <|-- Boleto
+Pagamento <|-- Pix
+Pagamento <|-- Cartao
+
+Cronograma "1" --> "*" EstudoDiario
+EstudoDiario "*" --> "1" DiaSemana
+EstudoDiario "1" --> "1" Disciplina
+
+note top of Usuario {
+    Gustavo Oliveira da Silva
+    Rodrigo Folha Moreira
+    Matheus Alexandre Nardi
+}
+        
+
+@enduml

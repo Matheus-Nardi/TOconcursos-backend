@@ -1,0 +1,19 @@
+[project]
+name = "toconcursos-app"
+version = "0.1.0"
+description = "TOConcursos backend app"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "fastapi",
+    "uvicorn[standard]",
+    "pydantic",
+    "SQLAlchemy",
+    "python-dotenv",
+    "alembic",
+    "pytest",
+    "pytest-asyncio",
+    "httpx",
+    "passlib[bcrypt]",
+    "python-jose"
+]
