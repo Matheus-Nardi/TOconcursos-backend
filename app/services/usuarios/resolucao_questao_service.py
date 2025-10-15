@@ -33,22 +33,7 @@ class ResolucaoQuestaoService:
         db_resolucao = self.repo.create_resolucao(db_resolucao)
         return ResolucaoQuestaoResponseDTO.model_validate(db_resolucao)
 
-    def get_resolucao(self, resolucao_id: int) -> ResolucaoQuestaoResponseDTO:
-        db_resolucao = self.repo.get_resolucao(resolucao_id)
-        if not db_resolucao:
-            raise NotFoundException("Resolução de questão não encontrada")
-        return ResolucaoQuestaoResponseDTO.model_validate(db_resolucao)
 
-    def get_all_resolucoes(self, skip: int, limit: int) -> list[ResolucaoQuestaoResponseDTO]:
-        resolucoes = self.repo.get_all_resolucoes(skip=skip, limit=limit)
+    def get_all_resolucoes(self, skip: int, limit: int, user_id: int) -> list[ResolucaoQuestaoResponseDTO]:
+        resolucoes = self.repo.get_all_resolucoes(skip=skip, limit=limit, user_id=user_id)
         return [ResolucaoQuestaoResponseDTO.model_validate(r) for r in resolucoes]
-
-    def update_resolucao(self, resolucao_id: int, resolucao: ResolucaoQuestaoRequestDTO) -> ResolucaoQuestaoResponseDTO:
-        novos_dados = resolucao.model_dump()
-        db_resolucao = self.repo.update_resolucao(resolucao_id, novos_dados)
-        if not db_resolucao:
-            raise NotFoundException("Resolução de questão não encontrada")
-        return ResolucaoQuestaoResponseDTO.model_validate(db_resolucao)
-
-    def delete_resolucao(self, resolucao_id: int) -> bool:
-        return self.repo.delete_resolucao(resolucao_id)
