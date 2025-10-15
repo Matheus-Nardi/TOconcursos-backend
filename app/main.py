@@ -65,8 +65,8 @@ app.include_router(cronograma_router.router)
 
 app.include_router(resolucao_questao_router.router)
 
-app.include_router(historico_simulado_router.router)
+# app.include_router(historico_simulado_router.router) # COMENTADO: resolução de simulado não sera implementado
 
-app.include_router(resolucao_questao_simulado_router.router)
+# app.include_router(resolucao_questao_simulado_router.router) # COMENTADO: resolução de simulado não sera implementado
 
 app.include_router(comentario_router.router)

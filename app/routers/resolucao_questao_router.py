@@ -7,7 +7,7 @@ from shared.response import response_dto
 from shared.get_current_user import get_current_user
 from models.usuarios.usuario import Usuario
 
-router = APIRouter(prefix="/resolucoes-questoes", tags=["ResolucoesQuestoes"])
+router = APIRouter(prefix="/resolucoes-questoes", tags=["Resolucoes de Questoes"])
 
 def get_db():
     db = SessionLocal()
