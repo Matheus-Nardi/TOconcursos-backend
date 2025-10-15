@@ -3,7 +3,7 @@ from models.usuarios.usuario import Usuario
 from repository.usuarios.usuario_repository import UsuarioRepository
 from schemas.usuarios.usuario import UsuarioRequestDTO, UsuarioResponseDTO
 from utils.security import hash_password, verify_password, create_access_token
-
+from schemas.usuarios import usuario as schemas
 class UsuarioService:
     def __init__(self, db: Session):
         self.repo = UsuarioRepository(db)
@@ -19,10 +19,10 @@ class UsuarioService:
         db_usuario = self.repo.create_usuario(db_usuario)
         return UsuarioResponseDTO.model_validate(db_usuario).model_dump(mode="json")
 
-    def get_usuario(self, usuario_id: int) -> dict | None:
+    def get_usuario(self, usuario_id: int) -> schemas.UsuarioResponseDTO:
         db_usuario = self.repo.get_usuario(usuario_id)
         if db_usuario:
-            return UsuarioResponseDTO.model_validate(db_usuario).model_dump(mode="json")
+            return schemas.UsuarioResponseDTO.model_validate(db_usuario)
         return None
 
     def get_all_usuarios(self, skip: int, limit: int) -> list[dict]:

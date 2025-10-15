@@ -44,18 +44,22 @@ class CronogramaService:
         db_cronograma = self.repo.create_cronograma(db_cronograma)
         return schemas.CronogramaResponseDTO.model_validate(db_cronograma)
 
-    def get_cronograma(self, cronograma_id: int) -> schemas.CronogramaResponseDTO:
-        db_cronograma = self.repo.get_cronograma(cronograma_id)
+    def get_cronograma(self, user_id:int, cronograma_id: int) -> schemas.CronogramaResponseDTO:
+        db_cronograma = self.repo.get_cronograma(cronograma_id, user_id)
         if db_cronograma:
             return schemas.CronogramaResponseDTO.model_validate(db_cronograma)
         return None
 
-    def get_all_cronogramas(self, skip, limit) -> list[schemas.CronogramaResponseDTO]:
-        cronogramas = self.repo.get_all_cronogramas(skip=skip, limit=limit)
+    def get_all_cronogramas(self, user_id:int, skip, limit) -> list[schemas.CronogramaResponseDTO]:
+        cronogramas = self.repo.get_all_cronogramas(user_id=user_id, skip=skip, limit=limit)
         return [schemas.CronogramaResponseDTO.model_validate(d) for d in cronogramas]
 
-    def delete_cronograma(self, cronograma_id: int) -> bool:
-        return self.repo.delete_cronograma(cronograma_id)
+    def delete_cronograma(self, user_id:int, cronograma_id: int) -> bool:
+        db_cronograma = self.repo.get_cronograma(cronograma_id, user_id)
+        if not db_cronograma:
+            raise ValueError("Cronograma não encontrado")
+        return self.repo.delete_cronograma(cronograma_id, user_id)
+    
 
     # def filter_cronograma(self, filtro: FiltroRequestDTO, skip: int = 0, limit: int = 10) -> list[schemas.CronogramaResponseDTO]:
     #     cronograma = self.repo.filter_cronograma(filtro=filtro, skip=skip, limit=limit)
