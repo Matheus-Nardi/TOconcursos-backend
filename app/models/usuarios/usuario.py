@@ -1,5 +1,6 @@
 from database import Base
 from sqlalchemy import Column, String, DateTime, Integer
+from sqlalchemy.orm import relationship
 from datetime import datetime
 from sqlalchemy.orm import relationship
 
@@ -16,4 +17,6 @@ class Usuario(Base):
     historicos = relationship("Historico", back_populates="usuario", cascade="all, delete-orphan")
     historicos_simulados = relationship("HistoricoSimulado", back_populates="usuario", cascade="all, delete-orphan")
     comentarios = relationship("Comentario", back_populates="usuario")
+
+    cronogramas = relationship("Cronograma", back_populates="usuario", cascade="all, delete-orphan")
 

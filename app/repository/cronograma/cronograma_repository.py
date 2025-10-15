@@ -12,28 +12,26 @@ class CronogramaRepository:
         self.db.commit()
         self.db.refresh(cronograma)
         return cronograma
-
-
-    
-    def get_cronograma(self, cronograma_id: int) -> models.Cronograma:
-        return self.db.get(models.Cronograma, cronograma_id)
+        
+    def get_cronograma(self, cronograma_id: int, user_id: int) -> models.Cronograma:
+        return self.db.query(models.Cronograma).filter(models.Cronograma.id == cronograma_id, models.Cronograma.usuario_id == user_id).first()
 
     def get_all_cronogramas(self) -> list[models.Cronograma]:
         return self.db.query(models.Cronograma).all()
-    
-    def get_all_cronogramas(self, skip: int = 0, limit: int = 10) -> list[models.Cronograma]:
-        return self.db.query(models.Cronograma).offset(skip).limit(limit).all()
 
-    def update_cronograma(self, cronograma_id: int, cronograma: schemas.CronogramaRequestDTO) -> models.Cronograma:
+    def get_all_cronogramas(self, user_id: int, skip: int = 0, limit: int = 10) -> list[models.Cronograma]:
+        return self.db.query(models.Cronograma).filter(models.Cronograma.usuario_id == user_id).offset(skip).limit(limit).all()
+
+    def update_cronograma(self, cronograma_id: int, cronograma: schemas.CronogramaRequestDTO, user_id: int) -> models.Cronograma:
         db_cronograma = self.get_cronograma(cronograma_id)
-        if db_cronograma:
+        if db_cronograma and db_cronograma.usuario_id == user_id:
             self.db.commit()
             self.db.refresh(db_cronograma)
         return db_cronograma
 
-    def delete_cronograma(self, cronograma_id: int) -> bool:
-        db_cronograma = self.get_cronograma(cronograma_id)
-        if db_cronograma:
+    def delete_cronograma(self, cronograma_id: int, user_id: int) -> bool:
+        db_cronograma = self.get_cronograma(cronograma_id, user_id=user_id)
+        if db_cronograma and db_cronograma.usuario_id == user_id:
             self.db.delete(db_cronograma)
             self.db.commit()
             return True
