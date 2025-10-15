@@ -2,8 +2,7 @@ from schemas.questoes import disciplina as schemas
 from sqlalchemy.orm import Session
 from models.questoes.disciplina import Disciplina
 from repository.questoes.disciplina_repository import DisciplinaRepository
-from fastapi import HTTPException
-from starlette import status
+from core.exceptions.exception import NotFoundException, ConflictException
 
 class DisciplinaService:
     def __init__(self, db: Session):
@@ -12,10 +11,7 @@ class DisciplinaService:
     def create_disciplina(self, disciplina: schemas.DisciplinaRequestDTO) -> schemas.DisciplinaResponseDTO:
         label_normalizado = disciplina.label.strip().lower().capitalize()
         if self.repo.get_by_name(label_normalizado):
-            raise HTTPException(
-                status_code=status.HTTP_409_CONFLICT,
-                detail=f"A disciplina '{label_normalizado}' já existe."
-            )
+            raise ConflictException(f"A disciplina '{label_normalizado}' já existe")
         db_disciplina = Disciplina(label=label_normalizado)
         saved_disciplina = self.repo.save(db_disciplina)
         return schemas.DisciplinaResponseDTO.model_validate(saved_disciplina)
@@ -23,10 +19,7 @@ class DisciplinaService:
     def get_disciplina(self, disciplina_id: int) -> schemas.DisciplinaResponseDTO:
         db_disciplina = self.repo.get_by_id(disciplina_id)
         if not db_disciplina:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND, 
-                detail="Disciplina não encontrada."
-            )
+            raise NotFoundException("Disciplina não encontrada")
         return schemas.DisciplinaResponseDTO.model_validate(db_disciplina)
 
     def get_all_disciplinas(self, skip: int = 0, limit: int = 100) -> list[schemas.DisciplinaResponseDTO]:
@@ -36,17 +29,11 @@ class DisciplinaService:
     def update_disciplina(self, disciplina_id: int, disciplina_dto: schemas.DisciplinaRequestDTO) -> schemas.DisciplinaResponseDTO:
         db_disciplina = self.repo.get_by_id(disciplina_id)
         if not db_disciplina:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND, 
-                detail="Disciplina não encontrada para atualização."
-            )
+            raise NotFoundException("Disciplina não encontrada")
         label_normalizado = disciplina_dto.label.strip().lower().capitalize()
         existing_disciplina = self.repo.get_by_name(label_normalizado)
         if existing_disciplina and existing_disciplina.id != disciplina_id:
-            raise HTTPException(
-                status_code=status.HTTP_409_CONFLICT,
-                detail=f"O label '{label_normalizado}' já está em uso por outra disciplina."
-            )
+            raise ConflictException(f"O label '{label_normalizado}' já está em uso por outra disciplina")
         db_disciplina.label = label_normalizado
         updated_disciplina = self.repo.save(db_disciplina)
         return schemas.DisciplinaResponseDTO.model_validate(updated_disciplina)
@@ -54,9 +41,6 @@ class DisciplinaService:
     def delete_disciplina(self, disciplina_id: int) -> None:
         db_disciplina = self.repo.get_by_id(disciplina_id)
         if not db_disciplina:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="Disciplina não encontrada para exclusão."
-            )
+            raise NotFoundException("Disciplina não encontrada")
         self.repo.delete(db_disciplina)
         return

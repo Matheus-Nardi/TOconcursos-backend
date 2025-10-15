@@ -2,6 +2,7 @@ from sqlalchemy.orm import Session
 from models.usuarios.historico import Historico
 from repository.usuarios.historico_repository import HistoricoRepository
 from schemas.usuarios.historico import HistoricoRequestDTO, HistoricoResponseDTO
+from core.exceptions.exception import NotFoundException
 
 class HistoricoService:
     def __init__(self, db: Session):
@@ -15,22 +16,22 @@ class HistoricoService:
         db_historico = self.repo.create_historico(db_historico)
         return HistoricoResponseDTO.model_validate(db_historico)
 
-    def get_historico(self, historico_id: int) -> HistoricoResponseDTO | None:
+    def get_historico(self, historico_id: int) -> HistoricoResponseDTO:
         db_historico = self.repo.get_historico(historico_id)
-        if db_historico:
-            return HistoricoResponseDTO.model_validate(db_historico)
-        return None
+        if not db_historico:
+            raise NotFoundException("Histórico não encontrado")
+        return HistoricoResponseDTO.model_validate(db_historico)
 
     def get_all_historicos(self, skip: int, limit: int) -> list[HistoricoResponseDTO]:
         historicos = self.repo.get_all_historicos(skip=skip, limit=limit)
         return [HistoricoResponseDTO.model_validate(h) for h in historicos]
 
-    def update_historico(self, historico_id: int, historico: HistoricoRequestDTO) -> HistoricoResponseDTO | None:
+    def update_historico(self, historico_id: int, historico: HistoricoRequestDTO) -> HistoricoResponseDTO:
         novos_dados = historico.model_dump()
         db_historico = self.repo.update_historico(historico_id, novos_dados)
-        if db_historico:
-            return HistoricoResponseDTO.model_validate(db_historico)
-        return None
+        if not db_historico:
+            raise NotFoundException("Histórico não encontrado")
+        return HistoricoResponseDTO.model_validate(db_historico)
 
     def delete_historico(self, historico_id: int) -> bool:
         return self.repo.delete_historico(historico_id)

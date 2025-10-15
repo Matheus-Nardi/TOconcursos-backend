@@ -7,7 +7,7 @@ from repository.questoes.disciplina_repository import DisciplinaRepository
 from datetime import datetime
 from models.cronograma import estudo_diario as models
 from repository.usuarios.usuario_repository import UsuarioRepository
-
+from core.exceptions.exception import NotFoundException, BadRequestException
 class CronogramaService:
     def __init__(self, db: Session):
         self.repo = CronogramaRepository(db)
@@ -18,12 +18,12 @@ class CronogramaService:
 
         for estudo in cronograma.estudos_diarios:
             if estudo.hora_fim <= estudo.hora_inicio:
-                raise ValueError("hora_fim deve ser maior que hora_inicio")
+                raise BadRequestException("A hora de fim deve ser maior que a hora de início")
             
         db_user = self.usuario_repo.get_usuario(user_id)
         if not db_user:
-            raise ValueError("Usuário não encontrado")
-        
+            raise NotFoundException("Usuário não encontrado")
+
         db_estudos_diarios = [
             models.EstudoDiario(
                 hora_inicio=estudo.hora_inicio,
@@ -46,9 +46,9 @@ class CronogramaService:
 
     def get_cronograma(self, user_id:int, cronograma_id: int) -> schemas.CronogramaResponseDTO:
         db_cronograma = self.repo.get_cronograma(cronograma_id, user_id)
-        if db_cronograma:
-            return schemas.CronogramaResponseDTO.model_validate(db_cronograma)
-        return None
+        if not db_cronograma:
+            raise NotFoundException("Cronograma não encontrado")
+        return schemas.CronogramaResponseDTO.model_validate(db_cronograma)
 
     def get_all_cronogramas(self, user_id:int, skip, limit) -> list[schemas.CronogramaResponseDTO]:
         cronogramas = self.repo.get_all_cronogramas(user_id=user_id, skip=skip, limit=limit)
@@ -57,7 +57,7 @@ class CronogramaService:
     def delete_cronograma(self, user_id:int, cronograma_id: int) -> bool:
         db_cronograma = self.repo.get_cronograma(cronograma_id, user_id)
         if not db_cronograma:
-            raise ValueError("Cronograma não encontrado")
+            raise NotFoundException("Cronograma não encontrado")
         return self.repo.delete_cronograma(cronograma_id, user_id)
     
 

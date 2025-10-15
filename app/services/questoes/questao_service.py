@@ -8,7 +8,7 @@ from repository.questoes.instituicao_repository import InstituicaoRepository
 from repository.questoes.banca_repository import BancaRepository
 from schemas.questoes.filtro_questao import FiltroRequestDTO
 from schemas.questoes.comentario import ComentarioResponseDTO
-
+from core.exceptions.exception import NotFoundException
 
 from models.questoes import alternativa as models
 class QuestaoService:
@@ -22,19 +22,19 @@ class QuestaoService:
     def create_questao(self, questao: schemas.QuestaoRequestDTO) -> schemas.QuestaoResponseDTO:
         db_disciplina = self.disciplina_repo.get_by_id(questao.id_disciplina)
         if not db_disciplina:
-            raise ValueError(f"Disciplina with id {questao.id_disciplina} not found.")
+            raise NotFoundException(f"Disciplina com id {questao.id_disciplina} não encontrada")
 
         db_orgao = self.orgao_repo.get_by_id(questao.id_orgao)
         if not db_orgao:
-            raise ValueError(f"Orgao with id {questao.id_orgao} not found.")
+            raise NotFoundException(f"Órgão com id {questao.id_orgao} não encontrado")
 
         db_instituicao = self.instituicao_repo.get_by_id(questao.id_instituicao)
         if not db_instituicao:
-            raise ValueError(f"Instituicao with id {questao.id_instituicao} not found.")
+            raise NotFoundException(f"Instituição com id {questao.id_instituicao} não encontrada")
 
         db_banca = self.banca_repo.get_by_id(questao.id_banca)
         if not db_banca:
-            raise ValueError(f"Banca with id {questao.id_banca} not found.")
+            raise NotFoundException(f"Banca com id {questao.id_banca} não encontrada")
 
 
         db_alternativas = [
@@ -58,9 +58,9 @@ class QuestaoService:
 
     def get_questao(self, questao_id: int) -> schemas.QuestaoResponseDTO:
         db_questao = self.repo.get_questao(questao_id)
-        if db_questao:
-            return schemas.QuestaoResponseDTO.model_validate(db_questao)
-        return None
+        if not db_questao:
+            raise NotFoundException("Questão não encontrada")
+        return schemas.QuestaoResponseDTO.model_validate(db_questao)
 
     def get_all_questaos(self, skip, limit) -> list[schemas.QuestaoResponseDTO]:
         questaos = self.repo.get_all_questaos(skip=skip, limit=limit)
