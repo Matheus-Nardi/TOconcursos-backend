@@ -2,8 +2,7 @@ from schemas.questoes import banca as schemas
 from sqlalchemy.orm import Session
 from models.questoes.banca import Banca
 from repository.questoes.banca_repository import BancaRepository
-from fastapi import HTTPException
-from starlette import status
+from core.exceptions.exception import NotFoundException, ConflictException
 
 class BancaService:
     def __init__(self, db: Session):
@@ -13,10 +12,7 @@ class BancaService:
         label_normalizado = banca_dto.label.strip().lower().capitalize()
         
         if self.repo.get_by_name(label_normalizado):
-            raise HTTPException(
-                status_code=status.HTTP_409_CONFLICT,
-                detail=f"A banca '{label_normalizado}' já existe."
-            )
+            raise ConflictException(f"A banca '{label_normalizado}' já existe")
         
         db_banca = Banca(label=label_normalizado)
         saved_banca = self.repo.save(db_banca)
@@ -27,10 +23,7 @@ class BancaService:
         db_banca = self.repo.get_by_id(banca_id)
         
         if not db_banca:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND, 
-                detail="Banca não encontrada."
-            )
+            raise NotFoundException("Banca não encontrada")
             
         return schemas.BancaResponseDTO.model_validate(db_banca)
 
@@ -41,19 +34,13 @@ class BancaService:
     def update_banca(self, banca_id: int, banca_dto: schemas.BancaRequestDTO) -> schemas.BancaResponseDTO:
         db_banca = self.repo.get_by_id(banca_id)
         if not db_banca:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND, 
-                detail="Banca não encontrada para atualização."
-            )
+            raise NotFoundException("Banca não encontrada")
         
         label_normalizado = banca_dto.label.strip().lower().capitalize()
 
         existing_banca = self.repo.get_by_name(label_normalizado)
         if existing_banca and existing_banca.id != banca_id:
-            raise HTTPException(
-                status_code=status.HTTP_409_CONFLICT,
-                detail=f"O label '{label_normalizado}' já está em uso por outra banca."
-            )
+            raise ConflictException(f"O label '{label_normalizado}' já está em uso por outra banca")
 
         db_banca.label = label_normalizado
         updated_banca = self.repo.save(db_banca)
@@ -63,10 +50,7 @@ class BancaService:
     def delete_banca(self, banca_id: int) -> None:
         db_banca = self.repo.get_by_id(banca_id)
         if not db_banca:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="Banca não encontrada para exclusão."
-            )
+            raise NotFoundException("Banca não encontrada")
         
         self.repo.delete(db_banca)
         

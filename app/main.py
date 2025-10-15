@@ -1,4 +1,5 @@
 # app/main.py
+from core.handler.exception_handler import register_handlers
 from fastapi import FastAPI
 from database import Base, engine
 from sqlalchemy import text
@@ -42,7 +43,7 @@ from routers import disciplina_router, orgao_router, instituicao_router, banca_r
 
 Base.metadata.create_all(bind=engine)
 
-
+register_handlers(app)
 app.include_router(disciplina_router.router)
 
 app.include_router(orgao_router.router)
