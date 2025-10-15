@@ -1,15 +1,18 @@
-from database import Base
-from sqlalchemy import Column, Integer, ForeignKey
-from sqlalchemy.orm import relationship
+# ARQUIVO COMENTADO - Modelo será removido da aplicação
+# from database import Base
+# from sqlalchemy import Column, Integer, ForeignKey
+# from sqlalchemy.orm import relationship
 
-class Historico(Base):
-    __tablename__ = "historicos"
 
-    id = Column(Integer, primary_key=True, autoincrement=True, index=True)
-    dias_sequencia = Column(Integer, nullable=False, default=0)
+# nao vai existir mais
+# class Historico(Base):
+#     __tablename__ = "historicos"
 
-    usuario_id = Column(Integer, ForeignKey("usuarios.id"), nullable=False)
+#     id = Column(Integer, primary_key=True, autoincrement=True, index=True)
+#     dias_sequencia = Column(Integer, nullable=False, default=0)
 
-    usuario = relationship("Usuario", back_populates="historicos")
-    resolucoes = relationship("ResolucaoQuestao", back_populates="historico", cascade="all, delete-orphan")
+#     usuario_id = Column(Integer, ForeignKey("usuarios.id"), nullable=False)
+
+#     usuario = relationship("Usuario", back_populates="historicos")
+#     resolucoes = relationship("ResolucaoQuestao", back_populates="historico", cascade="all, delete-orphan")
 

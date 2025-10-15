@@ -39,7 +39,8 @@ def on_startup():
         print(f"Erro ao executar o script SQL: {e}")
 
 
-from routers import disciplina_router, orgao_router, instituicao_router, banca_router, questao_router, auth_router, usuario_router, cronograma_router, historico_router, resolucao_questao_router, historico_simulado_router, resolucao_questao_simulado_router, comentario_router
+from routers import disciplina_router, orgao_router, instituicao_router, banca_router, questao_router, auth_router, usuario_router, cronograma_router, resolucao_questao_router, historico_simulado_router, resolucao_questao_simulado_router, comentario_router
+# from routers import historico_router  # COMENTADO: modelo Historico será removido
 
 Base.metadata.create_all(bind=engine)
 
@@ -60,7 +61,7 @@ app.include_router(auth_router.router)
 
 app.include_router(cronograma_router.router)
 
-app.include_router(historico_router.router)
+# app.include_router(historico_router.router)  # COMENTADO: modelo Historico será removido
 
 app.include_router(resolucao_questao_router.router)
 

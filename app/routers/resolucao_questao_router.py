@@ -4,6 +4,8 @@ from database import SessionLocal
 from services.usuarios.resolucao_questao_service import ResolucaoQuestaoService
 from schemas.usuarios import resolucao_questao as schemas
 from shared.response import response_dto
+from shared.get_current_user import get_current_user
+from models.usuarios.usuario import Usuario
 
 router = APIRouter(prefix="/resolucoes-questoes", tags=["ResolucoesQuestoes"])
 
@@ -21,8 +23,9 @@ def get_resolucao_service(db: Session = Depends(get_db)):
 def create_resolucao(
     resolucao: schemas.ResolucaoQuestaoRequestDTO,
     service: ResolucaoQuestaoService = Depends(get_resolucao_service),
+    current_user: Usuario = Depends(get_current_user)
 ):
-    created_resolucao = service.create_resolucao(resolucao)
+    created_resolucao = service.create_resolucao(resolucao, current_user.id)
     return response_dto(
         data=created_resolucao,
         status="success",

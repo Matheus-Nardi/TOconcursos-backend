@@ -32,10 +32,18 @@ class QuestaoRepository:
     def update_questao(self, questao_id: int, questao: schemas.QuestaoRequestDTO) -> models.Questao:
         db_questao = self.get_questao(questao_id)
         if db_questao:
-            db_questao.label = questao.label
             self.db.commit()
             self.db.refresh(db_questao)
         return db_questao
+
+    def update_already_answered(self, questao_id: int, ja_respondeu: bool) -> models.Questao:
+        db_questao = self.get_questao(questao_id)
+        if db_questao:
+            db_questao.ja_respondeu = ja_respondeu
+            self.db.commit()
+            self.db.refresh(db_questao)
+        return db_questao
+
 
     def delete_questao(self, questao_id: int) -> bool:
         db_questao = self.get_questao(questao_id)
