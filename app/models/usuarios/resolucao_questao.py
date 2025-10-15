@@ -10,8 +10,12 @@ class ResolucaoQuestao(Base):
     data_resolucao = Column(DateTime, default=datetime.utcnow, nullable=False)
     is_certa = Column(Boolean, nullable=False)
 
-    historico_id = Column(Integer, ForeignKey("historicos.id"), nullable=False)
     questao_id = Column(Integer, ForeignKey("questoes.id"), nullable=False)
-
-    historico = relationship("Historico", back_populates="resolucoes")
     questao = relationship("Questao", back_populates="resolucoes")
+
+
+    usuario_id = Column(Integer, ForeignKey("usuarios.id"), nullable=False)
+    usuario = relationship("Usuario", back_populates="resolucoes_questoes")
+    # Removido o relacionamento com Historico
+    # historico_id = Column(Integer, ForeignKey("historicos.id"), nullable=False)
+    # historico = relationship("Historico", back_populates="resolucoes")

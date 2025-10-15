@@ -1,18 +1,19 @@
 from pydantic import BaseModel
 from datetime import datetime
+from schemas.questoes.questao import QuestaoResponseDTO
+
 
 class ResolucaoQuestaoBaseDTO(BaseModel):
     is_certa: bool
-    data_resolucao: datetime | None = None
+   
 
 class ResolucaoQuestaoRequestDTO(ResolucaoQuestaoBaseDTO):
-    historico_id: int
     questao_id: int
 
 class ResolucaoQuestaoResponseDTO(ResolucaoQuestaoBaseDTO):
     id: int
-    historico_id: int
-    questao_id: int
+    questao: QuestaoResponseDTO
+    data_resolucao: datetime | None = None
 
     class Config:
         from_attributes = True
