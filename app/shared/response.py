@@ -1,4 +1,4 @@
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, Response
 from pydantic import BaseModel
 from typing import Any, Union, List
 
@@ -9,6 +9,9 @@ def response_dto(
     http_code: int = 200,
     data_format: str = "json"
 ):
+    if http_code == 204:
+        return Response(status_code=http_code)
+    
     accepted_formats = ["json"]
     if data_format not in accepted_formats:
         raise ValueError(f"Unsupported data format: {data_format}. Supported formats: {accepted_formats}")
