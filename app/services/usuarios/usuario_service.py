@@ -8,7 +8,7 @@ class UsuarioService:
     def __init__(self, db: Session):
         self.repo = UsuarioRepository(db)
 
-    def create_usuario(self, usuario: UsuarioRequestDTO) -> dict:
+    def create_usuario(self, usuario: UsuarioRequestDTO) -> UsuarioResponseDTO:
         db_usuario = Usuario(
             nome=usuario.nome,
             email=usuario.email,
@@ -17,7 +17,7 @@ class UsuarioService:
             senha=hash_password(usuario.senha)
         )
         db_usuario = self.repo.create_usuario(db_usuario)
-        return UsuarioResponseDTO.model_validate(db_usuario).model_dump(mode="json")
+        return UsuarioResponseDTO.model_validate(db_usuario)
 
     def get_usuario(self, usuario_id: int) -> schemas.UsuarioResponseDTO:
         db_usuario = self.repo.get_usuario(usuario_id)
@@ -25,15 +25,15 @@ class UsuarioService:
             return schemas.UsuarioResponseDTO.model_validate(db_usuario)
         return None
 
-    def get_all_usuarios(self, skip: int, limit: int) -> list[dict]:
+    def get_all_usuarios(self, skip: int, limit: int) -> list[UsuarioResponseDTO]:
         usuarios = self.repo.get_all_usuarios(skip=skip, limit=limit)
-        return [UsuarioResponseDTO.model_validate(u).model_dump(mode="json") for u in usuarios]
+        return [UsuarioResponseDTO.model_validate(u) for u in usuarios]
 
-    def update_usuario(self, usuario_id: int, usuario: UsuarioRequestDTO) -> dict | None:
-        novos_dados = usuario.model_dump(mode="json")
+    def update_usuario(self, usuario_id: int, usuario: UsuarioRequestDTO) -> UsuarioResponseDTO | None:
+        novos_dados = usuario.model_dump()
         db_usuario = self.repo.update_usuario(usuario_id, novos_dados)
         if db_usuario:
-            return UsuarioResponseDTO.model_validate(db_usuario).model_dump(mode="json")
+            return UsuarioResponseDTO.model_validate(db_usuario)
         return None
 
     def delete_usuario(self, usuario_id: int) -> bool:
