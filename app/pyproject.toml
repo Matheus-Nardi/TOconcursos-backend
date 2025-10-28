@@ -15,5 +15,6 @@ dependencies = [
     "pytest-asyncio",
     "httpx",
     "passlib[bcrypt]",
-    "python-jose"
+    "python-jose",
+    "psycopg2-binary"
 ]
