@@ -13,3 +13,4 @@ class Plano(Base):
     descricao = Column(String, nullable=False)
     valor = Column(Numeric(precision=10, scale=2), nullable=False)
     beneficios = Column(JSON, nullable=False)
+    pagamentos = relationship("Pagamento", back_populates="plano", cascade="all, delete-orphan")
