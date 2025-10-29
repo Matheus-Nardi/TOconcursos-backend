@@ -16,5 +16,5 @@ dependencies = [
     "httpx",
     "passlib[bcrypt]",
     "python-jose",
-    "psycopg2-binary"
+    "psycopg2-binary",
 ]
