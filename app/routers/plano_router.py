@@ -5,7 +5,8 @@ from database import SessionLocal
 from services.planos.plano_service import PlanoService
 from schemas.planos import plano as schemas
 from shared.response import response_dto
-
+from schemas.pagamento.pagamento import PagamentoRequestDTO
+from services.pagamento.pagamento_service import PagamentoService
 router = APIRouter(prefix="/planos", tags=["Planos"])
 
 # Dependência para o DB
@@ -18,6 +19,9 @@ def get_db():
 
 def get_plano_service(db: Session = Depends(get_db)):
     return PlanoService(db)
+
+def get_pagamento_service(db: Session = Depends(get_db)):
+    return PagamentoService(db)
 
 
 @router.get("/{plano_id}")
@@ -54,5 +58,26 @@ def get_all_planos(
         message="Planos retrieved successfully",
         http_code=status.HTTP_200_OK
     )
+
+@router.post("/assinar")
+def assinar_plano(
+    pagamento: PagamentoRequestDTO,
+    service: PagamentoService = Depends(get_pagamento_service),
+):
+    try:
+        assinatura = service.create_pagamento(pagamento)
+        return response_dto(
+            data=assinatura,
+            status="success",
+            message="Plano assinado com sucesso",
+            http_code=status.HTTP_201_CREATED
+        )
+    except HTTPException as e:
+        return response_dto(
+            data=None,
+            status="error",
+            message=e.detail,
+            http_code=e.status_code
+        )
 
 
