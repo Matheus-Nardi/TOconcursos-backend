@@ -9,6 +9,7 @@ from .cronograma_router import router as cronograma_router
 from .resolucao_questao_router import router as resolucao_questao_router
 from .comentario_router import router as comentario_router
 from .plano_router import router as plano_router
+from .perfil_router import router as perfil_router
 
 all_routers = [
     disciplina_router,
@@ -22,4 +23,5 @@ all_routers = [
     resolucao_questao_router,
     comentario_router,
     plano_router,
+    perfil_router,
 ]

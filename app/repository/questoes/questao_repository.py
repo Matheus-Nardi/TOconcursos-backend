@@ -1,8 +1,9 @@
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from models.questoes import questao as models
 from schemas.questoes import questao as schemas
 from schemas.questoes.filtro_questao import FiltroRequestDTO 
 from models.questoes.comentario import Comentario
+
 class QuestaoRepository:
     def __init__(self, db: Session):
         self.db = db
@@ -13,18 +14,57 @@ class QuestaoRepository:
         self.db.refresh(questao)
         return questao
 
-
     def get_questao_by_name(self, label: str) -> models.Questao:
-        return self.db.query(models.Questao).filter(models.Questao.label == label).first()
+        return (
+            self.db.query(models.Questao)
+            .options(
+                joinedload(models.Questao.disciplina),
+                joinedload(models.Questao.orgao),
+                joinedload(models.Questao.banca),
+                joinedload(models.Questao.instituicao)
+            )
+            .filter(models.Questao.label == label)
+            .first()
+        )
     
     def get_questao(self, questao_id: int) -> models.Questao:
-        return self.db.get(models.Questao, questao_id)
+        return (
+            self.db.query(models.Questao)
+            .options(
+                joinedload(models.Questao.disciplina),
+                joinedload(models.Questao.orgao),
+                joinedload(models.Questao.banca),
+                joinedload(models.Questao.instituicao)
+            )
+            .filter(models.Questao.id == questao_id)
+            .first()
+        )
 
     def get_all_questaos(self) -> list[models.Questao]:
-        return self.db.query(models.Questao).all()
+        return (
+            self.db.query(models.Questao)
+            .options(
+                joinedload(models.Questao.disciplina),
+                joinedload(models.Questao.orgao),
+                joinedload(models.Questao.banca),
+                joinedload(models.Questao.instituicao)
+            )
+            .all()
+        )
     
     def get_all_questaos(self, skip: int = 0, limit: int = 10) -> list[models.Questao]:
-        return self.db.query(models.Questao).offset(skip).limit(limit).all()
+        return (
+            self.db.query(models.Questao)
+            .options(
+                joinedload(models.Questao.disciplina),
+                joinedload(models.Questao.orgao),
+                joinedload(models.Questao.banca),
+                joinedload(models.Questao.instituicao)
+            )
+            .offset(skip)
+            .limit(limit)
+            .all()
+        )
 
     def get_all_comentarios(self, questao_id: int) -> list[Comentario]:
         return self.db.query(Comentario).filter(Comentario.id_questao == questao_id).all()
@@ -44,7 +84,6 @@ class QuestaoRepository:
             self.db.refresh(db_questao)
         return db_questao
 
-
     def delete_questao(self, questao_id: int) -> bool:
         db_questao = self.get_questao(questao_id)
         if db_questao:
@@ -55,7 +94,12 @@ class QuestaoRepository:
             return False
 
     def filter_questao(self, filtro: FiltroRequestDTO, skip: int = 0, limit: int = 10) -> list[models.Questao]:
-        query = self.db.query(models.Questao)
+        query = self.db.query(models.Questao).options(
+            joinedload(models.Questao.disciplina),
+            joinedload(models.Questao.orgao),
+            joinedload(models.Questao.banca),
+            joinedload(models.Questao.instituicao)
+        )
 
         if filtro.ja_respondeu is not None:
             query = query.filter(models.Questao.ja_respondeu == filtro.ja_respondeu)
