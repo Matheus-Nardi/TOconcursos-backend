@@ -5,6 +5,7 @@ from .pagamento.pagamento import Pagamento
 from .pagamento.boleto import Boleto
 from .pagamento.pix import Pix
 from .planos.plano import Plano
+from .pagamento.cartao import Cartao
 from .questoes.alternativa import Alternativa
 from .questoes.banca import Banca
 from .questoes.comentario import Comentario

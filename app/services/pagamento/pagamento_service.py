@@ -2,6 +2,7 @@ from sqlalchemy.orm import Session
 from models.pagamento.pagamento import Pagamento
 from models.pagamento.pix import Pix
 from models.pagamento.boleto import Boleto
+from models.pagamento.cartao import Cartao
 from repository.pagamento.pagamento_repository import PagamentoRepository
 from schemas.pagamento.pagamento import PagamentoRequestDTO, PagamentoResponseDTO
 from services.planos.plano_service import PlanoService
@@ -17,14 +18,15 @@ class PagamentoService:
         plano = self.plano_service.get_plano(pagamento.id_plano)
         if not plano:
             raise NotFoundException("Plano não encontrado")
- 
-        if(pagamento.tipo == "pix" and not pagamento.chave_pix) or (pagamento.tipo == "boleto" and not pagamento.codigo_barras):
-            raise UnauthorizedException("Dados de pagamento incompletos")
         
+        if pagamento.valor != plano.valor:
+            raise UnauthorizedException("Valor do pagamento inválido")
+         
         if(pagamento.tipo == "pix"):
            
             db_pagamento = Pix(
                 id_plano=pagamento.id_plano,
+                valor=pagamento.valor,
                 tipo=pagamento.tipo,
                 chave_pix="toconconcursos_chave_pix"
             )
@@ -32,8 +34,18 @@ class PagamentoService:
             db_pagamento = Boleto(
                 id_plano=pagamento.id_plano,
                 tipo=pagamento.tipo,
+                valor=pagamento.valor,
                 codigo_barras="23793381286000000001234567890123456789012345"
             )
+        elif(pagamento.tipo == "cartao"):
+            db_pagamento = Cartao(
+                id_plano=pagamento.id_plano,
+                tipo=pagamento.tipo,
+                valor=pagamento.valor,
+                numero=pagamento.cartao.numero,
+                nome_titular=pagamento.cartao.nome_titular,
+                validade=pagamento.cartao.validade,
+                codigo_seguranca=pagamento.cartao.codigo_seguranca)
         else:
             raise UnauthorizedException("Tipo de pagamento inválido")
         
