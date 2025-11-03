@@ -7,6 +7,10 @@ from schemas.planos import plano as schemas
 from shared.response import response_dto
 from schemas.pagamento.pagamento import PagamentoRequestDTO
 from services.pagamento.pagamento_service import PagamentoService
+from shared.get_current_user import get_current_user
+from models.usuarios.usuario import Usuario
+
+
 router = APIRouter(prefix="/planos", tags=["Planos"])
 
 # Dependência para o DB
@@ -63,9 +67,10 @@ def get_all_planos(
 def assinar_plano(
     pagamento: PagamentoRequestDTO,
     service: PagamentoService = Depends(get_pagamento_service),
+    current_user: Usuario = Depends(get_current_user)
 ):
     try:
-        assinatura = service.create_pagamento(pagamento)
+        assinatura = service.create_pagamento(current_user.id, pagamento)
         return response_dto(
             data=assinatura,
             status="success",
