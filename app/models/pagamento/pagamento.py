@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, Numeric, DateTime
+from sqlalchemy import Column, Integer, String, ForeignKey, Numeric, DateTime, func
 from sqlalchemy.orm import relationship
 from database import Base
 from datetime import datetime
@@ -9,7 +9,7 @@ class Pagamento(Base):
     id = Column(Integer, primary_key=True)
     id_plano = Column(Integer, ForeignKey("planos.id"), nullable=False)
     valor = Column(Numeric(precision=10, scale=2), nullable=True)
-    data_pagamento = Column(DateTime, nullable=True, default=datetime.now())
+    data_pagamento = Column(DateTime(timezone=True), server_default=func.now(),  nullable=True)
     tipo = Column(String(50))  # discriminador
 
     plano = relationship("Plano", back_populates="pagamentos")
