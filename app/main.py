@@ -1,9 +1,13 @@
 # app/main.py
 from core.handler.exception_handler import register_handlers
 from fastapi import FastAPI
-from database import Base, engine
-from sqlalchemy import text
 from fastapi.middleware.cors import CORSMiddleware
+
+from sqlalchemy import text
+from database import engine, Base  # Ajuste o import para onde estão seu engine e Base
+import logging
+logging.basicConfig(level=logging.INFO)
+log = logging.getLogger(__name__)
 
 app = FastAPI(title="TOConcursos API")
 
@@ -15,58 +19,29 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.on_event("startup")
-def on_startup():
+# @app.on_event("startup")
+# def on_startup():
 
-    print("Criando tabelas no banco de dados...")
-    Base.metadata.create_all(bind=engine)
-    print("Tabelas criadas com sucesso!")
+#     try:
+#         with open("import.sql", "r", encoding="utf-8") as f:
+#             sql_script = f.read()
 
-   
-    print("Iniciando a importação de dados do import.sql...")
-    try:
-       
-        with engine.connect() as connection:
-           
-            raw_conn = connection.connection
-            cursor = raw_conn.cursor()
-            with open("import.sql") as f:
+#         with engine.connect() as connection:
+#             with connection.begin():
+#                 connection.execute(text(sql_script))
         
-                cursor.executescript(f.read())
-            raw_conn.commit()
-        print("Script import.sql executado com sucesso!")
-    except Exception as e:
-        print(f"Erro ao executar o script SQL: {e}")
+#         log.info("Script import.sql executado com sucesso.")
+    
+#     except FileNotFoundError:
+#         log.warning("Arquivo import.sql não encontrado. Pulando importação de dados.")
+#     except Exception as e:
+#         log.error(f"Erro ao executar o script 'import.sql': {e}")
+#         # Se falhar aqui, você pode querer parar a execução
+#         raise
 
-
-from routers import disciplina_router, orgao_router, instituicao_router, banca_router, questao_router, auth_router, usuario_router, cronograma_router, resolucao_questao_router, historico_simulado_router, resolucao_questao_simulado_router, comentario_router
-# from routers import historico_router  # COMENTADO: modelo Historico será removido
-
+from routers import all_routers
 Base.metadata.create_all(bind=engine)
 
 register_handlers(app)
-app.include_router(disciplina_router.router)
-
-app.include_router(orgao_router.router)
-
-app.include_router(instituicao_router.router)
-
-app.include_router(banca_router.router)
-
-app.include_router(questao_router.router)
-
-app.include_router(usuario_router.router)
-
-app.include_router(auth_router.router)
-
-app.include_router(cronograma_router.router)
-
-# app.include_router(historico_router.router)  # COMENTADO: modelo Historico será removido
-
-app.include_router(resolucao_questao_router.router)
-
-# app.include_router(historico_simulado_router.router) # COMENTADO: resolução de simulado não sera implementado
-
-# app.include_router(resolucao_questao_simulado_router.router) # COMENTADO: resolução de simulado não sera implementado
-
-app.include_router(comentario_router.router)
+for router in all_routers:
+    app.include_router(router)

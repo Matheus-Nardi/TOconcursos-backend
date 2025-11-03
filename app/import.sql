@@ -1,5 +1,11 @@
 -- SQL Import Script - Concurso Tocantins
-
+INSERT INTO planos (nome, descricao, valor, beneficios) 
+VALUES 
+    ('Plano Básico', 'Acesso essencial.', 19.90, '["Recurso A", "Recurso B"]'),
+    ('Plano Pro', 'Acesso completo.', 49.90, '["Recurso A", "Recurso B", "Recurso C", "Suporte Prioritário"]'),
+    ('Plano Gratuito', 'Acesso limitado para teste.', 0.00, '["Recurso A"]');
+    
+     
 -- Inserindo dados na tabela 'bancas'
 INSERT INTO bancas (id, label) VALUES
 (1, 'COPESE/UFT'),

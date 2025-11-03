@@ -38,7 +38,7 @@ def serialize_data(data: Any) -> Any:
     if data is None:
         return None
     elif isinstance(data, BaseModel):
-        return data.model_dump(mode="json")
+        return data.model_dump(mode="json", exclude_none=True)
     elif isinstance(data, list):
         return [serialize_data(item) for item in data]
     elif isinstance(data, dict):

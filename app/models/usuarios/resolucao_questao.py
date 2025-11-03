@@ -1,5 +1,5 @@
 from database import Base
-from sqlalchemy import Column, Integer, DateTime, Boolean, ForeignKey
+from sqlalchemy import Column, Integer, DateTime, Boolean, ForeignKey, func
 from sqlalchemy.orm import relationship
 from datetime import datetime
 
@@ -7,7 +7,7 @@ class ResolucaoQuestao(Base):
     __tablename__ = "resolucoes_questoes"
 
     id = Column(Integer, primary_key=True, autoincrement=True, index=True)
-    data_resolucao = Column(DateTime, default=datetime.utcnow, nullable=False)
+    data_resolucao = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
     is_certa = Column(Boolean, nullable=False)
 
     questao_id = Column(Integer, ForeignKey("questoes.id"), nullable=False)
