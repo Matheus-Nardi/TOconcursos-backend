@@ -7,8 +7,6 @@ class PagamentoRequestDTO(BaseModel):
     id_plano: int
     tipo: Literal["pix", "boleto", "cartao"]  
     valor: float
-    chave_pix: Optional[str] = None
-    codigo_barras: Optional[str] = None
     cartao: Optional[CartaoRequestDTO] = None
     
     model_config = {

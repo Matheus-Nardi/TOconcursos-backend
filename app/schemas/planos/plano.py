@@ -11,3 +11,12 @@ class PlanoResponseDTO(BaseModel):
     model_config = {
         "from_attributes": True
     }
+
+class PlanoSimplificadoDTO(BaseModel):
+    id: int
+    nome: str
+    valor: float
+
+    model_config = {
+        "from_attributes": True
+    }

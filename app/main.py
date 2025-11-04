@@ -19,25 +19,25 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# @app.on_event("startup")
-# def on_startup():
+@app.on_event("startup")
+def on_startup():
 
-#     try:
-#         with open("import.sql", "r", encoding="utf-8") as f:
-#             sql_script = f.read()
+    try:
+        with open("import.sql", "r", encoding="utf-8") as f:
+            sql_script = f.read()
 
-#         with engine.connect() as connection:
-#             with connection.begin():
-#                 connection.execute(text(sql_script))
+        with engine.connect() as connection:
+            with connection.begin():
+                connection.execute(text(sql_script))
         
-#         log.info("Script import.sql executado com sucesso.")
+        log.info("Script import.sql executado com sucesso.")
     
-#     except FileNotFoundError:
-#         log.warning("Arquivo import.sql não encontrado. Pulando importação de dados.")
-#     except Exception as e:
-#         log.error(f"Erro ao executar o script 'import.sql': {e}")
-#         # Se falhar aqui, você pode querer parar a execução
-#         raise
+    except FileNotFoundError:
+        log.warning("Arquivo import.sql não encontrado. Pulando importação de dados.")
+    except Exception as e:
+        log.error(f"Erro ao executar o script 'import.sql': {e}")
+        # Se falhar aqui, você pode querer parar a execução
+        raise
 
 from routers import all_routers
 Base.metadata.create_all(bind=engine)

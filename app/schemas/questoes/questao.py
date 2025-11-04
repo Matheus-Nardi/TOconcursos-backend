@@ -34,6 +34,15 @@ class QuestaoResponseDTO(BaseModel):
     model_config = {
         "from_attributes": True
     }
+
+class QuestaoSimplificadaResponseDTO(BaseModel):
+    id: int
+    enunciado: str
+    ja_respondeu: bool
+
+    model_config = {
+        "from_attributes": True
+    }
         
         
         

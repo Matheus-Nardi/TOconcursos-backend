@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 from datetime import datetime
-from schemas.questoes.questao import QuestaoResponseDTO
+from schemas.questoes.questao import QuestaoSimplificadaResponseDTO
 
 
 class ResolucaoQuestaoBaseDTO(BaseModel):
@@ -12,7 +12,7 @@ class ResolucaoQuestaoRequestDTO(ResolucaoQuestaoBaseDTO):
 
 class ResolucaoQuestaoResponseDTO(ResolucaoQuestaoBaseDTO):
     id: int
-    questao: QuestaoResponseDTO
+    questao: QuestaoSimplificadaResponseDTO
     data_resolucao: datetime | None = None
 
     class Config:

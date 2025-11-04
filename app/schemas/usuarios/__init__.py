@@ -1,1 +1,4 @@
 from .usuario import UsuarioRequestDTO, UsuarioResponseDTO
+from .perfil_usuario import PerfilUsuarioCompletoDTO
+from .estatisticas_usuario import EstatisticasUsuarioDTO
+from .historico_assinaturas import HistoricoAssinaturasDTO

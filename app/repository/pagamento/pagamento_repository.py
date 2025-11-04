@@ -35,3 +35,14 @@ class PagamentoRepository:
         self.db.delete(pagamento)
         self.db.commit()
         return True
+    
+    def get_pagamentos_by_usuario(self, usuario_id: int) -> list[Pagamento]:
+        """
+        Retorna todos os pagamentos de um usuário ordenados por data (mais recente primeiro).
+        """
+        return (
+            self.db.query(Pagamento)
+            .filter(Pagamento.usuario_id == usuario_id)
+            .order_by(Pagamento.data_pagamento.desc())
+            .all()
+        )
