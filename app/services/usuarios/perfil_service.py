@@ -10,7 +10,7 @@ from repository.pagamento.pagamento_repository import PagamentoRepository
 from schemas.usuarios.perfil_usuario import PerfilUsuarioCompletoDTO
 from schemas.usuarios.estatisticas_usuario import EstatisticasUsuarioDTO
 from schemas.usuarios.historico_assinaturas import HistoricoAssinaturasDTO
-from schemas.planos.plano import PlanoResponseDTO
+from schemas.planos.plano import PlanoResponseDTO, PlanoSimplificadoDTO
 from datetime import datetime
 
 class PerfilUsuarioService:
@@ -134,8 +134,8 @@ class PerfilUsuarioService:
         planos = []
         for pagamento in pagamentos:
             if pagamento.plano:
-                planos.append(PlanoResponseDTO.model_validate(pagamento.plano))
-        
+                planos.append(PlanoSimplificadoDTO.model_validate(pagamento.plano))
+
         # O plano atual é o mais recente
         plano_atual = planos[0] if planos else None
         
