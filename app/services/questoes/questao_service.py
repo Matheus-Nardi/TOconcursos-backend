@@ -64,6 +64,10 @@ class QuestaoService:
 
     def get_all_questaos(self, skip, limit) -> list[schemas.QuestaoResponseDTO]:
         questaos = self.repo.get_all_questaos(skip=skip, limit=limit)
+        questoes = self.repo.get_all_questaos()
+        for q in questoes:
+            print(q.id, q.disciplina, q.orgao)
+
         return [schemas.QuestaoResponseDTO.model_validate(d) for d in questaos]
     
     def get_all_comentarios(self, questao_id: int) -> list[ComentarioResponseDTO]:
