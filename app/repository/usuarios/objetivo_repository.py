@@ -6,7 +6,7 @@ class ObjetivoRepository:
         self.db = db
 
 
-    def get_all_objetivos(self, skip: int = 0, limit: int = 10) -> list[Objetivo]:
+    def get_all_objetivos(self, skip: int = 0, limit: int = 50) -> list[Objetivo]:
         return self.db.query(Objetivo).offset(skip).limit(limit).all()
     
     def get_objetivo(self, objetivo_id: int) -> Objetivo | None:
