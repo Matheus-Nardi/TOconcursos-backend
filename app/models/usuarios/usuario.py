@@ -23,3 +23,4 @@ class Usuario(Base):
     resolucoes_questoes = relationship("ResolucaoQuestao", back_populates="usuario", cascade="all, delete-orphan")
 
     id_objetivo = Column(Integer, ForeignKey("objetivos.id"), nullable=True)
+    objetivo = relationship("Objetivo")

@@ -32,7 +32,7 @@ def create_usuario(
 
 @router.get("/{usuario_id}")
 def get_usuario_by_id(
-    usuario_id: str,
+    usuario_id: int,
     service: UsuarioService = Depends(get_usuario_service),
 ):
     usuario = service.get_usuario(usuario_id)
@@ -66,7 +66,7 @@ def get_all_usuarios(
 
 @router.put("/{usuario_id}")
 def update_usuario(
-    usuario_id: str,
+    usuario_id: int,
     usuario: schemas.UsuarioUpdateDTO,
     service: UsuarioService = Depends(get_usuario_service),
 ):
@@ -87,7 +87,7 @@ def update_usuario(
 
 @router.delete("/{usuario_id}")
 def delete_usuario(
-    usuario_id: str,
+    usuario_id: int,
     service: UsuarioService = Depends(get_usuario_service),
 ):
     if service.delete_usuario(usuario_id):
