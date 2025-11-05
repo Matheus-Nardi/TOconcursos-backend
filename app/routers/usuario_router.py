@@ -67,7 +67,7 @@ def get_all_usuarios(
 @router.put("/{usuario_id}")
 def update_usuario(
     usuario_id: str,
-    usuario: schemas.UsuarioRequestDTO,
+    usuario: schemas.UsuarioUpdateDTO,
     service: UsuarioService = Depends(get_usuario_service),
 ):
     updated_usuario = service.update_usuario(usuario_id, usuario)

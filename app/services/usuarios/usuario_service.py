@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from models.usuarios.usuario import Usuario
 from repository.usuarios.usuario_repository import UsuarioRepository
-from schemas.usuarios.usuario import UsuarioRequestDTO, UsuarioResponseDTO
+from schemas.usuarios.usuario import UsuarioRequestDTO, UsuarioResponseDTO, UsuarioUpdateDTO
 from utils.security import hash_password, verify_password, create_access_token
 from schemas.usuarios import usuario as schemas
 from core.exceptions.exception import NotFoundException, UnauthorizedException
@@ -30,12 +30,13 @@ class UsuarioService:
         usuarios = self.repo.get_all_usuarios(skip=skip, limit=limit)
         return [UsuarioResponseDTO.model_validate(u) for u in usuarios]
 
-    def update_usuario(self, usuario_id: int, usuario: UsuarioRequestDTO) -> UsuarioResponseDTO:
-        novos_dados = usuario.model_dump()
+    def update_usuario(self, usuario_id: int, usuario: UsuarioUpdateDTO) -> UsuarioResponseDTO:
+        novos_dados = usuario.model_dump(exclude_unset=True)
         db_usuario = self.repo.update_usuario(usuario_id, novos_dados)
         if not db_usuario:
             raise NotFoundException("Usuário não encontrado")
         return UsuarioResponseDTO.model_validate(db_usuario)
+    
 
     def delete_usuario(self, usuario_id: int) -> bool:
         return self.repo.delete_usuario(usuario_id)

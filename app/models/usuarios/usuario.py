@@ -1,5 +1,5 @@
 from database import Base
-from sqlalchemy import Column, String, DateTime, Integer, func
+from sqlalchemy import Column, String, DateTime, Integer, func, ForeignKey
 from sqlalchemy.orm import relationship
 from datetime import datetime
 from sqlalchemy.orm import relationship
@@ -21,3 +21,5 @@ class Usuario(Base):
     pagamentos = relationship("Pagamento", back_populates="usuario", cascade="all, delete-orphan")
 
     resolucoes_questoes = relationship("ResolucaoQuestao", back_populates="usuario", cascade="all, delete-orphan")
+
+    id_objetivo = Column(Integer, ForeignKey("objetivos.id"), nullable=True)
