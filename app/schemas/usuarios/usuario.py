@@ -1,4 +1,3 @@
-
 from schemas.cronograma.cronograma import CronogramaResponseDTO
 from pydantic import BaseModel
 from datetime import datetime

@@ -17,4 +17,6 @@ dependencies = [
     "passlib[bcrypt]",
     "python-jose",
     "psycopg2-binary",
+    "minio>=7.2.18",
+    "python-multipart>=0.0.20",
 ]

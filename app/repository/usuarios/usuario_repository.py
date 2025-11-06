@@ -44,3 +44,13 @@ class UsuarioRepository:
             .filter(Usuario.id == usuario_id)
             .first()
         )
+    
+    def update_avatar(self, usuario_id: int, avatar_url: str) -> Usuario:
+        usuario = self.get_usuario(usuario_id)
+        if not usuario:
+            return None
+
+        usuario.avatar = avatar_url
+        self.db.commit()
+        self.db.refresh(usuario)
+        return usuario

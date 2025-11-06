@@ -11,11 +11,15 @@ from schemas.usuarios.perfil_usuario import PerfilUsuarioCompletoDTO
 from schemas.usuarios.estatisticas_usuario import EstatisticasUsuarioDTO
 from schemas.usuarios.historico_assinaturas import HistoricoAssinaturasDTO
 from schemas.planos.plano import PlanoResponseDTO, PlanoSimplificadoDTO
+from services.upload.upload_service import UploadService
 from datetime import datetime
+import uuid
+from mimetypes import guess_extension
 
 class PerfilUsuarioService:
     def __init__(self, db: Session):
         self.repo = UsuarioRepository(db)
+        self.upload_service = UploadService()
         self.pagamentos_repo = PagamentoRepository(db)
         self.db = db
 
@@ -143,4 +147,39 @@ class PerfilUsuarioService:
             plano_atual=plano_atual,
             historico_assinaturas=planos
         )
+    
+    def upload_avatar(self, usuario_id: int, file) -> str:
+        db_usuario = self.repo.get_usuario(usuario_id)
+        if not db_usuario:
+            raise NotFoundException("Usuário não encontrado")
+
+   
+        arquivo_uuid = str(uuid.uuid4())
+
+   
+        extensao = guess_extension(file.content_type) or '.png'
+
+        extensao = extensao.lstrip('.')
+
+        file_bytes = file.file.read()
+        file_url = self.upload_service.upload_file(
+            file_path=f"avatars/{arquivo_uuid}.{extensao}",
+            file_data=file_bytes,
+            content_type=file.content_type
+    )
+
+        updated_user = self.repo.update_avatar(usuario_id, file_url)
+        return updated_user.avatar
+    
+    def remover_avatar(self, usuario_id: int) -> None:
+        db_usuario = self.repo.get_usuario(usuario_id)
+        if not db_usuario:
+            raise NotFoundException("Usuário não encontrado")
+
+        if not db_usuario.avatar:
+            raise ValueError("Usuário não possui avatar para remover")
+
+        file_path = self.upload_service.get_file_path_from_url(db_usuario.avatar)
+        self.upload_service.delete_file(file_path)
+        self.repo.update_avatar(usuario_id, None)
 
