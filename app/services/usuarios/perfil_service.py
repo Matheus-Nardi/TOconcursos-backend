@@ -153,7 +153,9 @@ class PerfilUsuarioService:
         if not db_usuario:
             raise NotFoundException("Usuário não encontrado")
 
-   
+        if db_usuario.avatar:
+           self.remover_avatar(usuario_id)
+           
         arquivo_uuid = str(uuid.uuid4())
 
    
