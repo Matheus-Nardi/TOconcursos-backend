@@ -1,5 +1,6 @@
 from models.questoes.dificuldade import DificuldadeEnum
 from pydantic import BaseModel
+from typing import Optional
 from schemas.questoes.alternativa import AlternativaRequestDTO, AlternativaResponseDTO
 from schemas.questoes.disciplina import DisciplinaResponseDTO
 
@@ -23,12 +24,12 @@ class QuestaoResponseDTO(BaseModel):
     id: int
     enunciado: str
     dificuldade: DificuldadeEnum
-    disciplina: DisciplinaResponseDTO
-    orgao: OrgaoResponseDTO
-    instituicao: InstituicaoResponseDTO
-    banca: BancaResponseDTO
+    disciplina: Optional[DisciplinaResponseDTO] = None
+    orgao: Optional[OrgaoResponseDTO] = None
+    instituicao: Optional[InstituicaoResponseDTO] = None
+    banca: Optional[BancaResponseDTO] = None
     alternativas: list[AlternativaResponseDTO]
-    ja_respondeu: bool
+    ja_respondeu: Optional[bool] = False
     comentarios: list[ComentarioResponseDTO] = []
 
     model_config = {

@@ -14,4 +14,5 @@ from .questoes.instituicao import Instituicao
 from .questoes.orgao import Orgao
 from .questoes.questao import Questao
 from .usuarios.usuario import Usuario
+from .usuarios.objetivo import Objetivo
 from .usuarios.resolucao_questao import ResolucaoQuestao
