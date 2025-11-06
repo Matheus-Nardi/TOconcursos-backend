@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, status, UploadFile, File
 from sqlalchemy.orm import Session
 from services.usuarios.perfil_service import PerfilUsuarioService
 from schemas.usuarios.perfil_usuario import PerfilUsuarioCompletoDTO
@@ -44,3 +44,18 @@ def update_perfil_usuario(
     service: UsuarioService = Depends(get_usuario_service)
 ):
     service.update_usuario(current_user.id, update_data)
+
+@router.post("/me/avatar", status_code=status.HTTP_201_CREATED)
+def upload_avatar(
+    file: UploadFile = File(...),
+    current_user: Usuario = Depends(get_current_user),
+    service: PerfilUsuarioService = Depends(get_perfil_service)
+):
+    return service.upload_avatar(current_user.id, file)
+
+@router.delete("/me/avatar", status_code=status.HTTP_204_NO_CONTENT)
+def delete_avatar(
+    current_user: Usuario = Depends(get_current_user),
+    service: PerfilUsuarioService = Depends(get_perfil_service)
+):
+    service.remover_avatar(current_user.id)

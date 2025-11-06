@@ -8,7 +8,6 @@ from schemas.cronograma import cronograma as schemas
 from shared.response import response_dto
 from shared.get_current_user import get_current_user
 from models.usuarios.usuario import Usuario
-
 router = APIRouter(prefix="/cronogramas", tags=["Cronogramas"])
 
 # Dependência para o DB
