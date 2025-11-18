@@ -113,5 +113,7 @@ class QuestaoRepository:
             query = query.filter(models.Questao.id_orgao == filtro.id_orgao)
         if filtro.id_instituicao is not None:
             query = query.filter(models.Questao.id_instituicao == filtro.id_instituicao)
+        if filtro.palavra_chave is not None:
+            query = query.filter(models.Questao.enunciado.ilike(f"%{filtro.palavra_chave}%"))
 
         return query.offset(skip).limit(limit).all()

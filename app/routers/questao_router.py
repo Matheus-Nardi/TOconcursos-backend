@@ -69,8 +69,17 @@ def get_all_questaos_filter(
         http_code=status.HTTP_200_OK
     )
 
-
-
+@router.get("/filtros/all")
+def get_all_filtros(
+    service: QuestaoService = Depends(get_questao_service),
+):
+    filtros = service.get_filtros()
+    return response_dto(
+        data=filtros,
+        status="success",
+        message="Filtros retrieved successfully",
+        http_code=status.HTTP_200_OK
+    )
 
 @router.get("/{questao_id}")
 def get_questao_by_id(

@@ -6,10 +6,10 @@ from repository.questoes.disciplina_repository import DisciplinaRepository
 from repository.questoes.orgao_repository import OrgaoRepository
 from repository.questoes.instituicao_repository import InstituicaoRepository
 from repository.questoes.banca_repository import BancaRepository
-from schemas.questoes.filtro_questao import FiltroRequestDTO
+from schemas.questoes.filtro_questao import FiltroRequestDTO, FiltroResponseDTO
 from schemas.questoes.comentario import ComentarioResponseDTO
 from core.exceptions.exception import NotFoundException
-
+from typing import List
 from models.questoes import alternativa as models
 class QuestaoService:
     def __init__(self, db: Session):
@@ -90,4 +90,12 @@ class QuestaoService:
     def filter_questao(self, filtro: FiltroRequestDTO, skip: int = 0, limit: int = 10) -> list[schemas.QuestaoResponseDTO]:
         questoes = self.repo.filter_questao(filtro=filtro, skip=skip, limit=limit)
         return [schemas.QuestaoResponseDTO.model_validate(d) for d in questoes]
+
+    def get_filtros(self) -> FiltroResponseDTO:
+        disciplinas = self.disciplina_repo.get_all()
+        orgaos = self.orgao_repo.get_all()
+        instituicoes = self.instituicao_repo.get_all()
+        bancas = self.banca_repo.get_all()
+        return FiltroResponseDTO(disciplinas=disciplinas, orgaos=orgaos, instituicoes=instituicoes, bancas=bancas)
+
  
