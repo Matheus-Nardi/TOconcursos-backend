@@ -1,5 +1,5 @@
 from database import Base
-from sqlalchemy import Column, Integer, String, ForeignKey, Enum, Boolean
+from sqlalchemy import Column, Integer, String, ForeignKey, Enum
 from sqlalchemy.orm import relationship
 from models.questoes.dificuldade import DificuldadeEnum
 class Questao(Base):
@@ -7,8 +7,6 @@ class Questao(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     enunciado = Column(String)
-
-    ja_respondeu = Column(Boolean, default=False)
     
     id_disciplina = Column(Integer, ForeignKey("disciplinas.id"), nullable=False)
     disciplina = relationship("Disciplina")

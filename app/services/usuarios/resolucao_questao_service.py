@@ -29,11 +29,40 @@ class ResolucaoQuestaoService:
             data_resolucao=datetime.utcnow(),
             usuario=db_user
         )
-        self.questao_repo.update_already_answered(db_questao.id, True)
         db_resolucao = self.repo.create_resolucao(db_resolucao)
-        return ResolucaoQuestaoResponseDTO.model_validate(db_resolucao)
+        
+        # Monta o DTO manualmente para calcular ja_respondeu corretamente
+        from schemas.questoes.questao import QuestaoSimplificadaResponseDTO
+        questao_simplificada = QuestaoSimplificadaResponseDTO(
+            id=db_questao.id,
+            enunciado=db_questao.enunciado,
+            ja_respondeu=True  # Se há uma resolução, a questão já foi respondida por esse usuário
+        )
+        
+        return ResolucaoQuestaoResponseDTO(
+            id=db_resolucao.id,
+            is_certa=db_resolucao.is_certa,
+            questao=questao_simplificada,
+            data_resolucao=db_resolucao.data_resolucao
+        )
 
 
     def get_all_resolucoes(self, skip: int, limit: int, user_id: int) -> list[ResolucaoQuestaoResponseDTO]:
         resolucoes = self.repo.get_all_resolucoes(skip=skip, limit=limit, user_id=user_id)
-        return [ResolucaoQuestaoResponseDTO.model_validate(r) for r in resolucoes]
+        
+        from schemas.questoes.questao import QuestaoSimplificadaResponseDTO
+        result = []
+        for r in resolucoes:
+            questao_simplificada = QuestaoSimplificadaResponseDTO(
+                id=r.questao.id,
+                enunciado=r.questao.enunciado,
+                ja_respondeu=True  # Se há uma resolução, a questão já foi respondida por esse usuário
+            )
+            result.append(ResolucaoQuestaoResponseDTO(
+                id=r.id,
+                is_certa=r.is_certa,
+                questao=questao_simplificada,
+                data_resolucao=r.data_resolucao
+            ))
+        
+        return result
