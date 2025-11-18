@@ -36,7 +36,8 @@ class QuestaoRepository:
                 joinedload(models.Questao.disciplina),
                 joinedload(models.Questao.orgao),
                 joinedload(models.Questao.banca),
-                joinedload(models.Questao.instituicao)
+                joinedload(models.Questao.instituicao),
+                joinedload(models.Questao.alternativas)
             )
             .filter(models.Questao.id == questao_id)
             .first()
