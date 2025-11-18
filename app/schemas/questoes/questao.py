@@ -17,8 +17,7 @@ class QuestaoRequestDTO(BaseModel):
     id_orgao: int
     id_instituicao: int
     id_banca: int
-    alternativas: list[AlternativaRequestDTO]  
-    ja_respondeu: bool = False
+    alternativas: list[AlternativaRequestDTO]
 
 class QuestaoResponseDTO(BaseModel):
     id: int
@@ -29,7 +28,7 @@ class QuestaoResponseDTO(BaseModel):
     instituicao: Optional[InstituicaoResponseDTO] = None
     banca: Optional[BancaResponseDTO] = None
     alternativas: list[AlternativaResponseDTO]
-    ja_respondeu: Optional[bool] = False
+    ja_respondeu: Optional[bool] = False  # Calculado dinamicamente baseado no usuário
     comentarios: list[ComentarioResponseDTO] = []
 
     model_config = {

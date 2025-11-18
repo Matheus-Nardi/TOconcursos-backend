@@ -56,40 +56,59 @@ class QuestaoService:
 
         return schemas.QuestaoResponseDTO.model_validate(db_questao)
 
-    def get_questao(self, questao_id: int) -> schemas.QuestaoResponseDTO:
+    def get_questao(self, questao_id: int, usuario_id: int | None = None) -> schemas.QuestaoResponseDTO:
         db_questao = self.repo.get_questao(questao_id)
         if not db_questao:
             raise NotFoundException("Questão não encontrada")
-        return schemas.QuestaoResponseDTO.model_validate(db_questao)
+        
+        questao_dto = schemas.QuestaoResponseDTO.model_validate(db_questao)
+        # Calcula ja_respondeu baseado no usuário
+        if usuario_id:
+            questao_dto.ja_respondeu = self.repo.usuario_respondeu_questao(questao_id, usuario_id)
+        else:
+            questao_dto.ja_respondeu = False
+        
+        return questao_dto
 
-    def get_all_questaos(self, skip, limit) -> list[schemas.QuestaoResponseDTO]:
-        questaos = self.repo.get_all_questaos(skip=skip, limit=limit)
-        questoes = self.repo.get_all_questaos()
-        for q in questoes:
-            print(q.id, q.disciplina, q.orgao)
-
-        return [schemas.QuestaoResponseDTO.model_validate(d) for d in questaos]
+    def get_all_questaos(self, skip: int, limit: int, usuario_id: int | None = None) -> list[schemas.QuestaoResponseDTO]:
+        questaos = self.repo.get_all_questaos(skip=skip, limit=limit, usuario_id=usuario_id)
+        
+        questoes_dto = []
+        for q in questaos:
+            questao_dto = schemas.QuestaoResponseDTO.model_validate(q)
+            # Calcula ja_respondeu baseado no usuário
+            if usuario_id:
+                questao_dto.ja_respondeu = self.repo.usuario_respondeu_questao(q.id, usuario_id)
+            else:
+                questao_dto.ja_respondeu = False
+            questoes_dto.append(questao_dto)
+        
+        return questoes_dto
     
     def get_all_comentarios(self, questao_id: int) -> list[ComentarioResponseDTO]:
         comentarios = self.repo.get_all_comentarios(questao_id)
         return [ComentarioResponseDTO.model_validate(c) for c in comentarios]
     
-    def mark_as_answered(self, questao_id: int, ja_respondeu: bool) -> schemas.QuestaoResponseDTO:
-        db_questao = self.repo.get_questao(questao_id)
-        if not db_questao:
-            raise NotFoundException("Questão não encontrada")
-        db_questao.ja_respondeu = ja_respondeu
-        self.repo.update_already_answered(db_questao.id, db_questao.ja_respondeu)
-        return schemas.QuestaoResponseDTO.model_validate(db_questao)
 
     # Futuramente um soft delete
     def delete_questao(self, questao_id: int) -> bool:
         return self.repo.delete_questao(questao_id)
     
 
-    def filter_questao(self, filtro: FiltroRequestDTO, skip: int = 0, limit: int = 10) -> list[schemas.QuestaoResponseDTO]:
-        questoes = self.repo.filter_questao(filtro=filtro, skip=skip, limit=limit)
-        return [schemas.QuestaoResponseDTO.model_validate(d) for d in questoes]
+    def filter_questao(self, filtro: FiltroRequestDTO, skip: int = 0, limit: int = 10, usuario_id: int | None = None) -> list[schemas.QuestaoResponseDTO]:
+        questoes = self.repo.filter_questao(filtro=filtro, skip=skip, limit=limit, usuario_id=usuario_id)
+        
+        questoes_dto = []
+        for q in questoes:
+            questao_dto = schemas.QuestaoResponseDTO.model_validate(q)
+            # Calcula ja_respondeu baseado no usuário
+            if usuario_id:
+                questao_dto.ja_respondeu = self.repo.usuario_respondeu_questao(q.id, usuario_id)
+            else:
+                questao_dto.ja_respondeu = False
+            questoes_dto.append(questao_dto)
+        
+        return questoes_dto
 
     def get_filtros(self) -> FiltroResponseDTO:
         disciplinas = self.disciplina_repo.get_all()

@@ -6,6 +6,9 @@ from database import SessionLocal
 from services.questoes.questao_service import QuestaoService
 from schemas.questoes import questao as schemas
 from shared.response import response_dto
+from shared.get_current_user import get_current_user_optional
+from schemas.usuarios.usuario import UsuarioResponseDTO
+from typing import Optional
 
 
 router = APIRouter(prefix="/questaos", tags=["Questaos"])
@@ -44,8 +47,10 @@ def get_all_questaos(
     skip: int = 0,
     limit: int = 10,
     service: QuestaoService = Depends(get_questao_service),
+    current_user: Optional[UsuarioResponseDTO] = Depends(get_current_user_optional),
 ):
-    questaos = service.get_all_questaos(skip=skip, limit=limit)
+    usuario_id = current_user.id if current_user else None
+    questaos = service.get_all_questaos(skip=skip, limit=limit, usuario_id=usuario_id)
     return response_dto(
         data=questaos,
         status="success",
@@ -60,8 +65,10 @@ def get_all_questaos_filter(
     skip: int = 0,
     limit: int = 10,
     service: QuestaoService = Depends(get_questao_service),
+    current_user: Optional[UsuarioResponseDTO] = Depends(get_current_user_optional),
 ):
-    questaos = service.filter_questao(filtro=filtro, skip=skip, limit=limit)
+    usuario_id = current_user.id if current_user else None
+    questaos = service.filter_questao(filtro=filtro, skip=skip, limit=limit, usuario_id=usuario_id)
     return response_dto(
         data=questaos,
         status="success",
@@ -85,8 +92,10 @@ def get_all_filtros(
 def get_questao_by_id(
     questao_id: int,
     service: QuestaoService = Depends(get_questao_service),
+    current_user: Optional[UsuarioResponseDTO] = Depends(get_current_user_optional),
 ):
-    questao = service.get_questao(questao_id)
+    usuario_id = current_user.id if current_user else None
+    questao = service.get_questao(questao_id, usuario_id=usuario_id)
     if questao:
         return response_dto(
             data=questao,
