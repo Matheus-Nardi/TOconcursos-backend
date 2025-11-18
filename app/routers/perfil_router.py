@@ -71,8 +71,18 @@ def estasticas_detalhes(
 ):
     quantidade_questoes_por_dia = service.get_quantidade_questoes_por_dia(current_user.id)
     quantidade_certo_errado_por_dia = service.get_quantidade_certo_errado_por_dia(current_user.id)
+    percentual_acerto_por_disciplina = service.get_percentual_acerto_por_disciplina(current_user.id)
+    evolucao_percentual_acerto = service.get_evolucao_percentual_acerto(current_user.id)
+    distribuicao_questoes_por_disciplina = service.get_distribuicao_questoes_por_disciplina(current_user.id)
+    percentual_acerto_por_orgao = service.get_percentual_acerto_por_orgao(current_user.id)
+    percentual_acerto_por_banca = service.get_percentual_acerto_por_banca(current_user.id)
     
     return GraficosResponseDTO(
         quantidade_questoes_por_dia=quantidade_questoes_por_dia,
-        quantidade_certo_errado_por_dia=quantidade_certo_errado_por_dia
+        quantidade_certo_errado_por_dia=quantidade_certo_errado_por_dia,
+        percentual_acerto_por_disciplina=percentual_acerto_por_disciplina,
+        evolucao_percentual_acerto=evolucao_percentual_acerto,
+        distribuicao_questoes_por_disciplina=distribuicao_questoes_por_disciplina,
+        percentual_acerto_por_orgao=percentual_acerto_por_orgao,
+        percentual_acerto_por_banca=percentual_acerto_por_banca
     )
