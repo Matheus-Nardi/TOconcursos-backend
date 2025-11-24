@@ -56,3 +56,64 @@ class UsuarioService:
             raise UnauthorizedException("Email ou senha inválidos")
         token_data = {"sub": str(usuarios.id), "email": usuarios.email}
         return create_access_token(token_data)
+    
+    def create_or_update_google_user(self, google_user_info: dict) -> UsuarioResponseDTO:
+        """
+        Cria ou atualiza usuário com dados do Google OAuth.
+        Se usuário já existe por google_id, atualiza.
+        Se usuário já existe por email, vincula google_id.
+        Se não existe, cria novo usuário.
+        """
+        from services.auth_google.auth_google import AuthGoogleService
+        
+        google_id = google_user_info.get('google_id')
+        email = google_user_info.get('email')
+        nome = google_user_info.get('nome')
+        avatar = google_user_info.get('avatar')
+        
+        # Verifica se já existe usuário com esse google_id
+        usuario_existente = self.repo.get_usuario_by_google_id(google_id)
+        
+        if usuario_existente:
+            # Atualiza dados do usuário existente
+            usuario_existente.nome = nome
+            if avatar:
+                usuario_existente.avatar = avatar
+            self.repo.db.commit()
+            self.repo.db.refresh(usuario_existente)
+            return UsuarioResponseDTO.model_validate(usuario_existente)
+        
+        # Verifica se já existe usuário com esse email
+        usuario_por_email = self.repo.get_usuario_by_email(email)
+        
+        if usuario_por_email:
+            # Vincula google_id à conta existente
+            usuario_por_email.id_google = google_id
+            usuario_por_email.nome = nome
+            if avatar:
+                usuario_por_email.avatar = avatar
+            self.repo.db.commit()
+            self.repo.db.refresh(usuario_por_email)
+            return UsuarioResponseDTO.model_validate(usuario_por_email)
+        
+        # Cria novo usuário
+        senha_aleatoria = AuthGoogleService.generate_random_password()
+        novo_usuario = Usuario(
+            nome=nome,
+            email=email,
+            cpf=None,  # CPF opcional para usuários OAuth
+            avatar=avatar,
+            senha=hash_password(senha_aleatoria),
+            id_google=google_id
+        )
+        novo_usuario = self.repo.create_usuario(novo_usuario)
+        return UsuarioResponseDTO.model_validate(novo_usuario)
+    
+    def authenticate_google_user(self, google_user_info: dict) -> str:
+        """
+        Autentica usuário do Google e retorna JWT token.
+        Cria ou atualiza usuário se necessário.
+        """
+        usuario = self.create_or_update_google_user(google_user_info)
+        token_data = {"sub": str(usuario.id), "email": usuario.email}
+        return create_access_token(token_data)

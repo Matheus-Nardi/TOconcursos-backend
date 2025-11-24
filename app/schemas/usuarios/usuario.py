@@ -6,11 +6,11 @@ from typing import Optional
 class UsuarioBaseDTO(BaseModel):
     nome: str
     email: str
-    cpf: str
+    cpf: str | None = None
     avatar: str | None = None
 
 class UsuarioRequestDTO(UsuarioBaseDTO):
-    senha: str
+    senha: str | None = None
 
 class UsuarioResponseDTO(UsuarioBaseDTO):
     id: int

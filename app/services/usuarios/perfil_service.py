@@ -9,7 +9,7 @@ from core.exceptions.exception import NotFoundException
 from repository.pagamento.pagamento_repository import PagamentoRepository
 from schemas.usuarios.perfil_usuario import PerfilUsuarioCompletoDTO
 from schemas.usuarios.estatisticas_usuario import EstatisticasUsuarioDTO
-from schemas.usuarios.historico_assinaturas import HistoricoAssinaturasDTO
+from schemas.usuarios.historico_assinaturas import HistoricoAssinaturasDTO, PlanoComDataAssinaturaDTO
 from schemas.planos.plano import PlanoResponseDTO, PlanoSimplificadoDTO
 from services.upload.upload_service import UploadService
 from datetime import datetime
@@ -131,21 +131,28 @@ class PerfilUsuarioService:
         if not pagamentos:
             return HistoricoAssinaturasDTO(
                 plano_atual=None,
-                historico_assinaturas=[]
+                historico_assinaturas=[],
             )
         
-        # Converter pagamentos em planos
-        planos = []
+        # Converter pagamentos em planos com suas respectivas datas de assinatura e método de pagamento
+        historico_assinaturas = []
         for pagamento in pagamentos:
             if pagamento.plano:
-                planos.append(PlanoSimplificadoDTO.model_validate(pagamento.plano))
+                plano_dto = PlanoSimplificadoDTO.model_validate(pagamento.plano)
+                historico_assinaturas.append(
+                    PlanoComDataAssinaturaDTO(
+                        plano=plano_dto,
+                        data_assinatura=pagamento.data_pagamento,
+                        metodo_pagamento=pagamento.tipo
+                    )
+                )
 
         # O plano atual é o mais recente
-        plano_atual = planos[0] if planos else None
+        plano_atual = historico_assinaturas[0].plano if historico_assinaturas else None
         
         return HistoricoAssinaturasDTO(
             plano_atual=plano_atual,
-            historico_assinaturas=planos
+            historico_assinaturas=historico_assinaturas,
         )
     
     def upload_avatar(self, usuario_id: int, file) -> str:

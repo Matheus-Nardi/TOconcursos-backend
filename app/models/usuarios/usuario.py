@@ -8,11 +8,11 @@ class Usuario(Base):
     __tablename__ = "usuarios"
 
     id = Column(Integer, primary_key=True, autoincrement=True, index=True)
-    cpf = Column(String, unique=True, nullable=False, index=True)
+    cpf = Column(String, unique=True, nullable=True, index=True)
     nome = Column(String, nullable=False)
     email = Column(String, unique=True, nullable=False, index=True)
     avatar = Column(String, nullable=True)
-    senha = Column(String, nullable=False)
+    senha = Column(String, nullable=True)
     data_criacao = Column(DateTime(timezone=True), server_default=func.now())
     comentarios = relationship("Comentario", back_populates="usuario")
 
@@ -24,3 +24,5 @@ class Usuario(Base):
 
     id_objetivo = Column(Integer, ForeignKey("objetivos.id"), nullable=True)
     objetivo = relationship("Objetivo")
+
+    id_google = Column(String, nullable=True, unique=True)

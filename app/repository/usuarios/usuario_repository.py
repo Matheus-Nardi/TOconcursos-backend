@@ -54,3 +54,11 @@ class UsuarioRepository:
         self.db.commit()
         self.db.refresh(usuario)
         return usuario
+    
+    def get_usuario_by_google_id(self, google_id: str) -> Usuario | None:
+        """Busca usuário pelo ID do Google"""
+        return self.db.query(Usuario).filter(Usuario.id_google == google_id).first()
+    
+    def get_usuario_by_email(self, email: str) -> Usuario | None:
+        """Busca usuário pelo email"""
+        return self.db.query(Usuario).filter(Usuario.email == email).first()

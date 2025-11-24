@@ -20,4 +20,6 @@ dependencies = [
     "minio>=7.2.18",
     "python-multipart>=0.0.20",
     "google-genai",
+    "google-auth-oauthlib>=1.2.3",
+    "google-api-python-client>=2.187.0",
 ]
