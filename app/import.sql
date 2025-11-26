@@ -1,267 +1,76 @@
--- SQL Import Script - Concurso Tocantins
--- Usando INSERT ... ON CONFLICT para evitar duplicações
+-- OPCIONAL: limpar dados anteriores de testes
+-- (use só se tiver certeza que pode apagar!)
+-- TRUNCATE TABLE alternativas, questoes, disciplinas, orgaos, instituicoes, bancas
+-- RESTART IDENTITY CASCADE;
 
--- Inserindo planos com ON CONFLICT
-INSERT INTO planos (id, nome, descricao, valor, beneficios) 
-VALUES 
-    (1, 'Plano Básico', 'Acesso essencial.', 19.90, '["Recurso A", "Recurso B"]'),
-    (2, 'Plano Pro', 'Acesso completo.', 49.90, '["Recurso A", "Recurso B", "Recurso C", "Suporte Prioritário"]'),
-    (3, 'Plano Gratuito', 'Acesso limitado para teste.', 0.00, '["Recurso A"]')
-ON CONFLICT (id) DO NOTHING;
+-- 1) Tabelas de apoio (disciplinas, orgaos, instituicoes, bancas)
 
--- Inserindo dados na tabela 'bancas'
-INSERT INTO bancas (id, label) VALUES
-(1, 'COPESE/UFT'),
-(2, 'Cebraspe'),
-(3, 'FGV'),
-(4, 'AOCP')
-ON CONFLICT (id) DO NOTHING;
-
--- Inserindo dados na tabela 'instituicoes'
-INSERT INTO instituicoes (id, label) VALUES
-(1, 'Prefeitura de Palmas'),
-(2, 'Governo do Estado do Tocantins'),
-(3, 'Assembleia Legislativa do Tocantins'),
-(4, 'Universidade Federal do Tocantins (UFT)')
-ON CONFLICT (id) DO NOTHING;
-
--- Inserindo dados na tabela 'disciplinas'
 INSERT INTO disciplinas (id, label) VALUES
-(1, 'Língua Portuguesa'),
-(2, 'Raciocínio Lógico e Matemático'),
-(3, 'Direito Constitucional'),
-(4, 'Direito Administrativo'),
-(5, 'Informática'),
-(6, 'Legislação Específica do Tocantins'),
-(7, 'Atualidades e Conhecimentos Gerais'),
-(8, 'Direito Penal'),
-(9, 'Contabilidade Pública'),
-(10, 'Administração Geral')
-ON CONFLICT (id) DO NOTHING;
+  (1, 'Língua Portuguesa'),
+  (2, 'Historia e Geografia do Tocantins');
 
--- Inserindo dados na tabela 'orgaos'
 INSERT INTO orgaos (id, label) VALUES
-(1, 'Tribunal de Justiça do Estado do Tocantins (TJTO)'),
-(2, 'Ministério Público do Estado do Tocantins (MPTO)'),
-(3, 'Defensoria Pública do Estado do Tocantins (DPE-TO)'),
-(4, 'Tribunal de Contas do Estado do Tocantins (TCE-TO)'),
-(5, 'Polícia Militar do Estado do Tocantins (PMTO)'),
-(6, 'Corpo de Bombeiros Militar do Estado do Tocantins (CBMTO)'),
-(7, 'Polícia Civil do Estado do Tocantins (PCTO)'),
-(8, 'Secretaria da Educação do Tocantins (SEDUC-TO)'),
-(9, 'Secretaria da Saúde do Tocantins (SESAU-TO)')
-ON CONFLICT (id) DO NOTHING;
+  (1, 'Prefeitura Municipal de Palmas');
 
--- Inserindo dados na tabela 'questoes'
--- Corrigido: usando os nomes do enum (FACIL, MEDIO, DIFICIL) ao invés dos valores
-INSERT INTO questoes (id, enunciado, id_instituicao, id_disciplina, id_orgao, dificuldade, id_banca) VALUES
--- Bloco 1: História e Geografia do Tocantins
-(1, 'O Estado do Tocantins foi oficialmente criado pela Constituição Federal de 1988, sendo desmembrado de qual outro estado brasileiro?', 2, 7, 2, 'FACIL', 1),
-(2, 'Qual é o nome da maior ilha fluvial do mundo, localizada no estado do Tocantins?', 2, 7, 2, 'FACIL', 2),
-(3, 'A capital do Tocantins, Palmas, foi projetada e construída especificamente para ser a sede do governo do novo estado. Em que ano ela foi fundada?', 1, 7, 1, 'MEDIO', 3),
-(4, 'O Parque Estadual do Jalapão, um dos principais destinos turísticos do Tocantins, é famoso por suas paisagens únicas. Qual das seguintes características NÃO corresponde ao Jalapão?', 2, 7, 2, 'MEDIO', 1),
-(5, 'O "Bico do Papagaio" é uma importante região geográfica, social e econômica do Tocantins. Ela está localizada no:', 3, 7, 3, 'MEDIO', 4),
+INSERT INTO instituicoes (id, label) VALUES
+  (1, 'UFTCOPESE');
 
--- Bloco 2: Legislação e Administração Pública (Estadual)
-(6, 'De acordo com a Constituição do Estado do Tocantins, o Poder Executivo é exercido pelo Governador do Estado, auxiliado pelos:', 3, 3, 3, 'MEDIO', 2),
-(7, 'Qual o nome do primeiro governador do estado do Tocantins, figura central no movimento autonomista que levou à criação do estado?', 3, 7, 3, 'MEDIO', 3),
-(8, 'A Usina Hidrelétrica de Lajeado, uma importante fonte de energia para o estado e para o país, está localizada em qual rio?', 2, 7, 2, 'FACIL', 1),
-(9, 'O Palácio Araguaia, sede do Poder Executivo do Governo do Tocantins, está localizado em qual cidade?', 1, 7, 1, 'FACIL', 4),
+INSERT INTO bancas (id, label) VALUES
+  (1, 'UFTCOPESE');
 
--- Bloco 3: Conhecimentos Gerais e Atualidades do Tocantins
-(10, 'A economia do Tocantins tem como um de seus pilares principais a:', 2, 7, 2, 'MEDIO', 3),
-(11, 'Qual município do Tocantins é conhecido nacionalmente por suas praias de rio e por ser um polo turístico durante a temporada de veraneio?', 1, 7, 1, 'FACIL', 2),
-(12, 'A Universidade Federal do Tocantins (UFT) é a principal instituição de ensino superior do estado. Seu campus principal está localizado em:', 4, 7, 4, 'FACIL', 1),
-(13, 'A culinária tocantinense é rica e diversificada. Um prato típico da região, feito à base de carne de sol desfiada, farinha e temperos, é o(a):', 2, 7, 2, 'MEDIO', 4),
-(14, 'O Monumento aos Dezoito do Forte de Copacabana, localizado na Praça dos Girassóis em Palmas, homenageia um importante evento da história do Brasil. Qual evento é esse?', 1, 7, 1, 'DIFICIL', 2),
+-- 2) Questões (usando os IDs acima)
+-- dificuldade: 'medio', 'medio', 'facil'
 
--- Bloco 4: Português e Raciocínio Lógico (Contextualizado)
-(15, 'Na frase "O Tocantins, que é o mais novo estado da federação, possui belezas naturais exuberantes.", o trecho "que é o mais novo estado da federação" exerce a função sintática de:', 4, 1, 4, 'MEDIO', 3),
-(16, 'Considerando a palavra "TOCANTINS", quantos anagramas (permutações das letras) podem ser formados?', 4, 2, 4, 'DIFICIL', 1),
-(17, 'Um servidor público de Palmas trabalha 6 horas por dia e analisa 20 processos. Se ele passar a trabalhar 8 horas por dia, mantendo a mesma produtividade, quantos processos analisará?', 1, 2, 1, 'FACIL', 4),
-(18, 'Assinale a alternativa em que a concordância verbal está INCORRETA, considerando o contexto tocantinense.', 3, 1, 3, 'MEDIO', 2),
-(19, 'Se a população de Palmas era de aproximadamente 300.000 habitantes e cresceu 10% em dois anos, qual a população aproximada após esse período?', 1, 2, 1, 'FACIL', 3),
-(20, 'Identifique a figura de linguagem presente na frase: "O Rio Tocantins abraça a cidade de Miracema com suas águas."', 4, 1, 4, 'MEDIO', 1)
-ON CONFLICT (id) DO NOTHING;
+INSERT INTO questoes (id, enunciado, id_disciplina, dificuldade, id_orgao, id_instituicao, id_banca) VALUES
+  (1, 'QUESTÃO 08
+Assinale a alternativa CORRETA que indique a sequência de
+verbos adequados nas frases.
+I. _____no discurso o início de seus estudos.
+II. A próxima _______legislativa iniciará em 24 de fevereiro.
+III. O projeto apresentado veio ____ objetivos dos
+trabalhadores, atendendo às suas reivindicações.', 1, 'medio', 1, 1, 1),
 
--- Inserindo dados na tabela 'alternativas'
--- Corrigido: questao_id -> id_questao para bater com o modelo
--- Respostas para a Questão 1
-INSERT INTO alternativas (id, descricao, is_correta, id_questao) VALUES
-(1, 'Goiás', TRUE, 1),
-(2, 'Mato Grosso', FALSE, 1),
-(3, 'Pará', FALSE, 1),
-(4, 'Maranhão', FALSE, 1),
-(5, 'Bahia', FALSE, 1)
-ON CONFLICT (id) DO NOTHING;
+  (2, 'QUESTÃO 10
+Em textos oficiais, deve-se evitar a fragmentação de frases,
+uma vez que esse recurso estilístico dificulta a compreensão.
+Assinale a alternativa que apresenta o uso da fragmentação
+frasal de forma INCORRETA.', 1, 'medio', 1, 1, 1),
 
--- Respostas para a Questão 2
-INSERT INTO alternativas (id, descricao, is_correta, id_questao) VALUES
-(6, 'Ilha do Bananal', TRUE, 2),
-(7, 'Ilha de Marajó', FALSE, 2),
-(8, 'Ilha do Mel', FALSE, 2),
-(9, 'Ilha Grande', FALSE, 2),
-(10, 'Arquipélago de Anavilhanas', FALSE, 2)
-ON CONFLICT (id) DO NOTHING;
+  (3, 'QUESTÃO 14
+O Tocantins tem destaque na produção agrícola, tanto regional
+quanto nacional. Nos últimos anos teve aumento considerável
+na área plantada e na produção agrícola.
+Assinale a alternativa CORRETA que indica os principais grãos
+produzido no estado.', 2, 'facil', 1, 1, 1);
 
--- Respostas para a Questão 3
-INSERT INTO alternativas (id, descricao, is_correta, id_questao) VALUES
-(11, '1988', FALSE, 3),
-(12, '1989', TRUE, 3),
-(13, '1990', FALSE, 3),
-(14, '1991', FALSE, 3),
-(15, '1987', FALSE, 3)
-ON CONFLICT (id) DO NOTHING;
+-- 3) Alternativas da Q8 (correta = A)
 
--- Respostas para a Questão 4
-INSERT INTO alternativas (id, descricao, is_correta, id_questao) VALUES
-(16, 'Dunas de areia dourada', FALSE, 4),
-(17, 'Fervedouros de água cristalina', FALSE, 4),
-(18, 'Cachoeiras e rios', FALSE, 4),
-(19, 'Plantações de soja em larga escala', TRUE, 4),
-(20, 'Formações rochosas, como a Pedra Furada', FALSE, 4)
-ON CONFLICT (id) DO NOTHING;
+INSERT INTO alternativas (id, descricao, explicacao, is_correta, id_questao) VALUES
+  (1, 'Evocou; sessão; ao encontro dos.', NULL, TRUE, 1),
+  (2, 'Avocou; sessão; de encontro aos.', NULL, FALSE, 1),
+  (3, 'Invocou; seção; ao encontro dos.', NULL, FALSE, 1),
+  (4, 'Evocou; cessão; de encontro aos.', NULL, FALSE, 1),
+  (5, 'Avocou; seção; ao encontro dos.', NULL, FALSE, 1);
 
--- Respostas para a Questão 5
-INSERT INTO alternativas (id, descricao, is_correta, id_questao) VALUES
-(21, 'Extremo Norte do estado, na confluência dos rios Araguaia e Tocantins.', TRUE, 5),
-(22, 'Região Sul do estado, na divisa com Goiás.', FALSE, 5),
-(23, 'Região Central, nos arredores de Palmas.', FALSE, 5),
-(24, 'A Leste, na divisa com a Bahia e o Piauí.', FALSE, 5),
-(25, 'A Oeste, na Ilha do Bananal.', FALSE, 5)
-ON CONFLICT (id) DO NOTHING;
+-- 4) Alternativas da Q10 (correta = D)
 
--- Respostas para a Questão 6
-INSERT INTO alternativas (id, descricao, is_correta, id_questao) VALUES
-(26, 'Deputados Estaduais', FALSE, 6),
-(27, 'Secretários de Estado', TRUE, 6),
-(28, 'Desembargadores do Tribunal de Justiça', FALSE, 6),
-(29, 'Prefeitos das cidades', FALSE, 6),
-(30, 'Membros do Ministério Público', FALSE, 6)
-ON CONFLICT (id) DO NOTHING;
+INSERT INTO alternativas (id, descricao, explicacao, is_correta, id_questao) VALUES
+  (6, 'O documento foi aprovado no Comitê, após ampla
+discussão.', NULL, FALSE, 2),
+  (7, 'Após ampla discussão, o documento foi aprovado no
+Comitê.', NULL, FALSE, 2),
+  (8, 'O documento, após ampla discussão, foi aprovado no
+Comitê.', NULL, FALSE, 2),
+  (9, 'O documento foi aprovado no Comitê. Após, ampla
+discussão.', NULL, TRUE, 2),
+  (10, 'Depois de ampla discussão, o documento foi aprovado no
+Comitê.', NULL, FALSE, 2);
 
--- Respostas para a Questão 7
-INSERT INTO alternativas (id, descricao, is_correta, id_questao) VALUES
-(31, 'Mauro Carlesse', FALSE, 7),
-(32, 'Marcelo Miranda', FALSE, 7),
-(33, 'José Wilson Siqueira Campos', TRUE, 7),
-(34, 'Moisés Avelino', FALSE, 7),
-(35, 'Carlos Gaguim', FALSE, 7)
-ON CONFLICT (id) DO NOTHING;
+-- 5) Alternativas da Q14 (correta = B)
 
--- Respostas para a Questão 8
-INSERT INTO alternativas (id, descricao, is_correta, id_questao) VALUES
-(36, 'Rio Araguaia', FALSE, 8),
-(37, 'Rio Formoso', FALSE, 8),
-(38, 'Rio Javaés', FALSE, 8),
-(39, 'Rio do Sono', FALSE, 8),
-(40, 'Rio Tocantins', TRUE, 8)
-ON CONFLICT (id) DO NOTHING;
-
--- Respostas para a Questão 9
-INSERT INTO alternativas (id, descricao, is_correta, id_questao) VALUES
-(41, 'Araguaína', FALSE, 9),
-(42, 'Gurupi', FALSE, 9),
-(43, 'Palmas', TRUE, 9),
-(44, 'Porto Nacional', FALSE, 9),
-(45, 'Paraíso do Tocantins', FALSE, 9)
-ON CONFLICT (id) DO NOTHING;
-
--- Respostas para a Questão 10
-INSERT INTO alternativas (id, descricao, is_correta, id_questao) VALUES
-(46, 'Indústria de tecnologia', FALSE, 10),
-(47, 'Extrativismo mineral', FALSE, 10),
-(48, 'Turismo de luxo', FALSE, 10),
-(49, 'Agronegócio, especialmente a produção de grãos e a pecuária.', TRUE, 10),
-(50, 'Indústria automobilística', FALSE, 10)
-ON CONFLICT (id) DO NOTHING;
-
--- Respostas para a Questão 11
-INSERT INTO alternativas (id, descricao, is_correta, id_questao) VALUES
-(51, 'Dianópolis', FALSE, 11),
-(52, 'Araguaína', FALSE, 11),
-(53, 'Gurupi', FALSE, 11),
-(54, 'Araguatins', FALSE, 11),
-(55, 'Araguanã', TRUE, 11)
-ON CONFLICT (id) DO NOTHING;
-
--- Respostas para a Questão 12
-INSERT INTO alternativas (id, descricao, is_correta, id_questao) VALUES
-(56, 'Araguaína', FALSE, 12),
-(57, 'Gurupi', FALSE, 12),
-(58, 'Porto Nacional', FALSE, 12),
-(59, 'Palmas', TRUE, 12),
-(60, 'Miracema do Tocantins', FALSE, 12)
-ON CONFLICT (id) DO NOTHING;
-
--- Respostas para a Questão 13
-INSERT INTO alternativas (id, descricao, is_correta, id_questao) VALUES
-(61, 'Paçoca de carne de sol', TRUE, 13),
-(62, 'Feijoada', FALSE, 13),
-(63, 'Acarajé', FALSE, 13),
-(64, 'Churrasco', FALSE, 13),
-(65, 'Moqueca', FALSE, 13)
-ON CONFLICT (id) DO NOTHING;
-
--- Respostas para a Questão 14
-INSERT INTO alternativas (id, descricao, is_correta, id_questao) VALUES
-(66, 'Guerra do Paraguai', FALSE, 14),
-(67, 'Revolta da Vacina', FALSE, 14),
-(68, 'Revolução de 1930', FALSE, 14),
-(69, 'Levante dos 18 do Forte de Copacabana', TRUE, 14),
-(70, 'Guerra de Canudos', FALSE, 14)
-ON CONFLICT (id) DO NOTHING;
-
--- Respostas para a Questão 15
-INSERT INTO alternativas (id, descricao, is_correta, id_questao) VALUES
-(71, 'Aposto explicativo', TRUE, 15),
-(72, 'Vocativo', FALSE, 15),
-(73, 'Predicativo do sujeito', FALSE, 15),
-(74, 'Objeto direto', FALSE, 15),
-(75, 'Adjunto adverbial', FALSE, 15)
-ON CONFLICT (id) DO NOTHING;
-
--- Respostas para a Questão 16
-INSERT INTO alternativas (id, descricao, is_correta, id_questao) VALUES
-(76, '362.880', FALSE, 16),
-(77, '1.814.400', FALSE, 16),
-(78, '907.200', TRUE, 16),
-(79, '3.628.800', FALSE, 16),
-(80, '453.600', FALSE, 16)
-ON CONFLICT (id) DO NOTHING;
-
--- Respostas para a Questão 17
-INSERT INTO alternativas (id, descricao, is_correta, id_questao) VALUES
-(81, 'Aproximadamente 23 processos', FALSE, 17),
-(82, 'Aproximadamente 25 processos', FALSE, 17),
-(83, 'Aproximadamente 27 processos', TRUE, 17),
-(84, '30 processos', FALSE, 17),
-(85, '20 processos', FALSE, 17)
-ON CONFLICT (id) DO NOTHING;
-
--- Respostas para a Questão 18
-INSERT INTO alternativas (id, descricao, is_correta, id_questao) VALUES
-(86, 'Fazem cinco anos que Palmas foi fundada.', TRUE, 18),
-(87, 'A maioria dos turistas visitou o Jalapão.', FALSE, 18),
-(88, 'Houve muitos eventos na Praia da Graciosa.', FALSE, 18),
-(89, 'Existe muitas praias de rio no Tocantins.', FALSE, 18),
-(90, 'Mais de um político compareceu à cerimônia.', FALSE, 18)
-ON CONFLICT (id) DO NOTHING;
-
--- Respostas para a Questão 19
-INSERT INTO alternativas (id, descricao, is_correta, id_questao) VALUES
-(91, '310.000', FALSE, 19),
-(92, '320.000', FALSE, 19),
-(93, '330.000', TRUE, 19),
-(94, '340.000', FALSE, 19),
-(95, '360.000', FALSE, 19)
-ON CONFLICT (id) DO NOTHING;
-
--- Respostas para a Questão 20
-INSERT INTO alternativas (id, descricao, is_correta, id_questao) VALUES
-(96, 'Metáfora', FALSE, 20),
-(97, 'Hipérbole', FALSE, 20),
-(98, 'Eufemismo', FALSE, 20),
-(99, 'Ironia', FALSE, 20),
-(100, 'Prosopopeia (ou Personificação)', TRUE, 20)
-ON CONFLICT (id) DO NOTHING;
+INSERT INTO alternativas (id, descricao, explicacao, is_correta, id_questao) VALUES
+  (11, 'Soja, trigo e aveia.', NULL, FALSE, 3),
+  (12, 'Soja, milho e arroz.', NULL, TRUE, 3),
+  (13, 'Milho, centeio e trigo.', NULL, FALSE, 3),
+  (14, 'Soja, cevada e centeio.', NULL, FALSE, 3),
+  (15, 'Arroz, trigo e cevada.', NULL, FALSE, 3);
