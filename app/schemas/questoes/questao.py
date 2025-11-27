@@ -22,6 +22,7 @@ class QuestaoRequestDTO(BaseModel):
 class QuestaoResponseDTO(BaseModel):
     id: int
     enunciado: str
+    enunciado_linhas: list[str] | None = None
     dificuldade: DificuldadeEnum
     disciplina: Optional[DisciplinaResponseDTO] = None
     orgao: Optional[OrgaoResponseDTO] = None

@@ -16,8 +16,12 @@ RUN uv sync --frozen
 # Copiar código da aplicação
 COPY app/ ./
 
+# Copiar entrypoint que executa migrações e sobe a API
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
 # Expor porta do FastAPI
 EXPOSE 8080
 
-# Rodar a aplicação (via uv)
-CMD ["uv", "run", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080", "--reload"]
+# Usar entrypoint que roda Alembic e depois inicia o uvicorn
+ENTRYPOINT ["/entrypoint.sh"]

@@ -1,4 +1,5 @@
 from schemas.questoes import questao as schemas
+import re
 from sqlalchemy.orm import Session
 from models.questoes.questao import Questao
 from repository.questoes.questao_repository import QuestaoRepository
@@ -62,6 +63,11 @@ class QuestaoService:
             raise NotFoundException("Questão não encontrada")
         
         questao_dto = schemas.QuestaoResponseDTO.model_validate(db_questao)
+        # Quebra o enunciado em linhas apenas se houver itens em algarismos romanos (I., II., III., ...)
+        if questao_dto.enunciado:
+            linhas = questao_dto.enunciado.split("\n")
+            if any(re.match(r"^[IVXLCDM]+\.", linha.strip()) for linha in linhas):
+                questao_dto.enunciado_linhas = linhas
         # Calcula ja_respondeu baseado no usuário
         if usuario_id:
             questao_dto.ja_respondeu = self.repo.usuario_respondeu_questao(questao_id, usuario_id)
@@ -76,6 +82,10 @@ class QuestaoService:
         questoes_dto = []
         for q in questaos:
             questao_dto = schemas.QuestaoResponseDTO.model_validate(q)
+            if questao_dto.enunciado:
+                linhas = questao_dto.enunciado.split("\n")
+                if any(re.match(r"^[IVXLCDM]+\.", linha.strip()) for linha in linhas):
+                    questao_dto.enunciado_linhas = linhas
             # Calcula ja_respondeu baseado no usuário
             if usuario_id:
                 questao_dto.ja_respondeu = self.repo.usuario_respondeu_questao(q.id, usuario_id)
@@ -101,6 +111,10 @@ class QuestaoService:
         questoes_dto = []
         for q in questoes:
             questao_dto = schemas.QuestaoResponseDTO.model_validate(q)
+            if questao_dto.enunciado:
+                linhas = questao_dto.enunciado.split("\n")
+                if any(re.match(r"^[IVXLCDM]+\.", linha.strip()) for linha in linhas):
+                    questao_dto.enunciado_linhas = linhas
             # Calcula ja_respondeu baseado no usuário
             if usuario_id:
                 questao_dto.ja_respondeu = self.repo.usuario_respondeu_questao(q.id, usuario_id)

@@ -13,7 +13,7 @@ app = FastAPI(title="TOConcursos API")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  
+    allow_origins=["http://localhost:3000", "https://toconcursos-frontend.vercel.app", "http://152.67.61.34:3000", "http://152.67.61.34.nip.io:3000"],  
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
