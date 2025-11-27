@@ -2,6 +2,8 @@ from database import SessionLocal
 from models.questoes import Disciplina, Orgao, Instituicao, Banca, DificuldadeEnum
 from models.questoes.questao import Questao
 from models.questoes.alternativa import Alternativa
+from models.usuarios.objetivo import Objetivo
+from models.planos.plano import Plano
 
 
 def get_or_create_by_label(db, model, label: str):
@@ -12,6 +14,35 @@ def get_or_create_by_label(db, model, label: str):
         db.commit()
         db.refresh(obj)
     return obj
+
+
+def get_or_create_objetivo(db, nome: str, area: str):
+    obj = (
+        db.query(Objetivo)
+        .filter(Objetivo.nome == nome, Objetivo.area == area)
+        .first()
+    )
+    if obj is None:
+        obj = Objetivo(nome=nome, area=area)
+        db.add(obj)
+        db.commit()
+        db.refresh(obj)
+    return obj
+
+
+def get_or_create_plano(db, nome: str, descricao: str, valor, beneficios):
+    plano = db.query(Plano).filter(Plano.nome == nome).first()
+    if plano is None:
+        plano = Plano(
+            nome=nome,
+            descricao=descricao,
+            valor=valor,
+            beneficios=beneficios,
+        )
+        db.add(plano)
+        db.commit()
+        db.refresh(plano)
+    return plano
 
 
 def get_or_create_questao(
@@ -68,7 +99,54 @@ def ensure_alternativas(
 def run():
     db = SessionLocal()
     try:
-        # Tabelas de apoio
+        # Objetivos (áreas de concurso)
+        get_or_create_objetivo(db, nome="Bombeiro Militar", area="Militar")
+        get_or_create_objetivo(db, nome="Polícia Militar", area="Militar")
+        get_or_create_objetivo(db, nome="Polícia Civil", area="Policial")
+        get_or_create_objetivo(db, nome="Carreira Tribunal (TJ/TRT/TRF)", area="Tribunais")
+        get_or_create_objetivo(db, nome="Carreira Fiscal (Receita, SEFAZ, TCU)", area="Fiscal")
+        get_or_create_objetivo(db, nome="Carreira Administrativa (Prefeituras/Estados/União)", area="Administrativo")
+        get_or_create_objetivo(db, nome="Área de Saúde", area="Saúde")
+        get_or_create_objetivo(db, nome="Área de Educação", area="Educação")
+
+        # Planos (assinaturas)
+        get_or_create_plano(
+            db,
+            nome="TOConcursos Essencial",
+            descricao="Plano ideal para quem está começando a se preparar para concursos do Tocantins, com foco em base teórica e resolução de questões.",
+            valor=14.90,
+            beneficios=[
+                "Acesso às questões da plataforma de Língua Portuguesa e Conhecimentos Regionais do Tocantins.",
+                "Resolução ilimitada de questões com correção automática.",
+                "Estatísticas básicas de desempenho por disciplina.",
+            ],
+        )
+        get_or_create_plano(
+            db,
+            nome="TOConcursos Intensivo",
+            descricao="Plano para quem já está na rotina de estudos e quer acelerar resultados com simulados e análises mais detalhadas.",
+            valor=24.90,
+            beneficios=[
+                "Tudo do plano Essencial.",
+                "Simulados temáticos por banca, órgão e área (militar, policial, tribunais, etc.).",
+                "Cadernos personalizados por disciplina e nível de dificuldade.",
+                "Metas semanais de estudo com acompanhamento de progresso.",
+            ],
+        )
+        get_or_create_plano(
+            db,
+            nome="TOConcursos Elite",
+            descricao="Plano completo para quem está na reta final e quer extrair o máximo da plataforma com estatísticas avançadas e foco cirúrgico nas falhas.",
+            valor=34.90,
+            beneficios=[
+                "Tudo do plano Intensivo.",
+                "Relatórios avançados de desempenho por disciplina, assunto e nível de dificuldade.",
+                "Revisão inteligente priorizando questões erradas, em dúvida e marcadas como importantes.",
+                "Sugestões de foco com base no histórico de erros do candidato.",
+            ],
+        )
+
+        # Tabelas de apoio (questões)
         disciplina_portugues = get_or_create_by_label(db, Disciplina, "Língua Portuguesa")
         disciplina_hist_geo = get_or_create_by_label(db, Disciplina, "Historia e Geografia do Tocantins")
         disciplina_matematica = get_or_create_by_label(db, Disciplina, "Matemática e Raciocínio Lógico")
