@@ -5,12 +5,24 @@ from schemas.usuarios.usuario import UsuarioRequestDTO, UsuarioResponseDTO, Usua
 from utils.security import hash_password, verify_password, create_access_token
 from schemas.usuarios import usuario as schemas
 from repository.usuarios.objetivo_repository import ObjetivoRepository
-from core.exceptions.exception import NotFoundException, UnauthorizedException
+from core.exceptions.exception import NotFoundException, UnauthorizedException, ConflictException
+
+
 class UsuarioService:
     def __init__(self, db: Session):
         self.repo = UsuarioRepository(db)
         self.objetivo_repo = ObjetivoRepository(db)
+
     def create_usuario(self, usuario: UsuarioRequestDTO) -> UsuarioResponseDTO:
+        # Verifica se já existe usuário com o mesmo e-mail
+        if self.repo.get_usuario_by_email(usuario.email):
+            raise ConflictException("E-mail já está em uso")
+
+        # Verifica se já existe usuário com o mesmo CPF (quando informado)
+        if usuario.cpf is not None:
+            if self.repo.get_usuario_by_cpf(usuario.cpf):
+                raise ConflictException("CPF já está em uso")
+
         db_usuario = Usuario(
             nome=usuario.nome,
             email=usuario.email,

@@ -1,6 +1,8 @@
 from sqlalchemy.orm import Session
 from models.usuarios.usuario import Usuario
 from sqlalchemy.orm import joinedload
+
+
 class UsuarioRepository:
     def __init__(self, db: Session):
         self.db = db
@@ -58,7 +60,11 @@ class UsuarioRepository:
     def get_usuario_by_google_id(self, google_id: str) -> Usuario | None:
         """Busca usuário pelo ID do Google"""
         return self.db.query(Usuario).filter(Usuario.id_google == google_id).first()
-    
+
     def get_usuario_by_email(self, email: str) -> Usuario | None:
         """Busca usuário pelo email"""
         return self.db.query(Usuario).filter(Usuario.email == email).first()
+
+    def get_usuario_by_cpf(self, cpf: str) -> Usuario | None:
+        """Busca usuário pelo CPF"""
+        return self.db.query(Usuario).filter(Usuario.cpf == cpf).first()
